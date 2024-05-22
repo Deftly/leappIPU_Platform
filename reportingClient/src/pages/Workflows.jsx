@@ -1,4 +1,5 @@
-import WorkflowTable from "../features/workflows/WorkflowTable";
+// import WorkflowTable from "../features/workflows/WorkflowTable";
+import WorkflowTableV2 from "../features/workflows/WorkflowTableV2";
 
 import Heading from "../ui/Heading";
 
@@ -8,7 +9,8 @@ const Workflows = () => {
       <div className="flex justify-between items-end mb-8">
         <Heading as="h1">Workflows</Heading>
       </div>
-      <WorkflowTable />
+      {/* <WorkflowTable /> */}
+      <WorkflowTableV2 />
     </div>
   );
 };
