@@ -1,6 +1,9 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+
+import PageNotFound from "./pages/PageNotFound";
+
 import AppLayout from "./ui/AppLayout";
 
 const queryClient = new QueryClient({
@@ -27,7 +30,7 @@ const App = () => {
             <Route path="hosts" element={<div>Hosts</div>} />
             <Route path="FAQ" element={<div>FAQ</div>} />
           </Route>
-          <Route path="*" element={<div>Page Not Found</div>} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
       {/*TODO: Add <Toaster /> if using react-hot-toast for notifications*/}

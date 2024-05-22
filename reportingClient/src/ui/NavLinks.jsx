@@ -1,7 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-
 import clsx from "clsx";
-
 import {
   AdjustmentsHorizontalIcon,
   CheckCircleIcon,
@@ -28,8 +26,10 @@ const NavLinks = () => {
             to={link.href}
             className={clsx(
               "flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-100 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3",
+              "transition duration-300 ease-in-out transform hover:-translate-y-1",
+              "shadow-md hover:shadow-lg", // Added box shadow classes
               {
-                "bg-sky-100 text-blue-600": location.pathname === link.href, // Conditional class
+                "bg-sky-100 text-blue-600": location.pathname === link.href,
               },
             )}
           >
