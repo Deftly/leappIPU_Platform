@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import AppLayout from "./ui/AppLayout";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,7 +17,7 @@ const App = () => {
       <ReactQueryDevtools initialIsOpen={false} />
       <BrowserRouter>
         <Routes>
-          <Route element={<div>App Layout</div>}>
+          <Route element={<AppLayout />}>
             <Route index element={<div>Dashboard</div>} />
             <Route path="workflows" element={<div>Workflows</div>} />
             <Route
@@ -24,6 +25,7 @@ const App = () => {
               element={<div>Workflow stages</div>}
             />
             <Route path="hosts" element={<div>Hosts</div>} />
+            <Route path="FAQ" element={<div>FAQ</div>} />
           </Route>
           <Route path="*" element={<div>Page Not Found</div>} />
         </Routes>
