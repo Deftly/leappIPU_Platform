@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 import Dashboard from "./pages/Dashboard";
 import Workflows from "./pages/Workflows";
@@ -37,7 +38,7 @@ const App = () => {
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
-      {/*TODO: Add <Toaster /> if using react-hot-toast for notifications*/}
+      <Toaster />
     </QueryClientProvider>
   );
 };

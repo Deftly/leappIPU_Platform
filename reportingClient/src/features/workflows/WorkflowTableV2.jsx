@@ -1,5 +1,7 @@
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
+import "tippy.js/animations/scale-subtle.css";
+import { toast } from "react-hot-toast";
 
 import { MAX_TABLE_DATA_LENGTH } from "../../utils/constants";
 
@@ -51,6 +53,11 @@ const WorkflowTableV2 = () => {
     return data;
   };
 
+  const handleDataClick = (cellData) => {
+    navigator.clipboard.writeText(cellData);
+    toast.success("Data copied to clipboard!");
+  };
+
   return (
     <div className="px-4 sm:px-6 lg:px-0">
       <div className="sm:flex sm:items-center">
@@ -100,39 +107,29 @@ const WorkflowTableV2 = () => {
                         const isTruncated =
                           cellData.length > MAX_TABLE_DATA_LENGTH;
 
-                        const handleDataClick = () => {
-                          navigator.clipboard.writeText(cellData);
-                        };
-
                         return (
                           <td
                             key={key}
-                            className={`whitespace-nowrap px-3 py-4 text-sm text-gray-600 ${
-                              isTruncated ? "relative cursor-pointer" : ""
-                            }`}
+                            className="whitespace-nowrap px-3 py-4 text-sm text-gray-600"
                           >
-                            {isTruncated ? (
-                              <Tippy
-                                content={
-                                  <div
-                                    onClick={handleDataClick}
-                                    className="cursor-pointer"
-                                  >
-                                    {cellData}
-                                  </div>
-                                }
-                                theme="custom-tooltip"
-                                animation="scale-subtle"
-                                interactive
-                                duration={[null, 0]}
-                              >
-                                <span onClick={handleDataClick}>
-                                  {truncateData(cellData)}
-                                </span>
-                              </Tippy>
-                            ) : (
-                              cellData
-                            )}
+                            <div
+                              onClick={() => handleDataClick(cellData)}
+                              className="cursor-pointer"
+                            >
+                              {isTruncated ? (
+                                <Tippy
+                                  content={cellData}
+                                  theme="custom-tooltip"
+                                  animation="scale-subtle"
+                                  interactive
+                                  duration={[null, 0]}
+                                >
+                                  <span>{truncateData(cellData)}</span>
+                                </Tippy>
+                              ) : (
+                                cellData
+                              )}
+                            </div>
                           </td>
                         );
                       })}
