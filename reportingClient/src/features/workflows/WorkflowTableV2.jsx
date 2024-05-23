@@ -1,4 +1,5 @@
-import { useState } from "react";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
 
 import { MAX_TABLE_DATA_LENGTH } from "../../utils/constants";
 
@@ -12,11 +13,27 @@ const people = [
     status: "Successful",
     release: "1.17.1",
   },
+  {
+    started: "5/4/2024, 5:48:35 PM",
+    finished: "5/4/2024, 12:03:54 AM",
+    hostname: "lva40besplsh5h.ecomm.devicenp.rpg",
+    region: "amrs",
+    workflow: "Inhibitor Check 8 To 8",
+    status: "Successful",
+    release: "1.17.1",
+  },
+  {
+    started: "5/5/2024, 5:48:35 PM",
+    finished: "5/4/2024, 12:03:54 AM",
+    hostname: "lva40besplsh5h.ecomm.devicenp.rpg",
+    region: "amrs",
+    workflow: "Inhibitor Check 8 To 8",
+    status: "Successful",
+    release: "1.17.1",
+  },
 ];
 
 const WorkflowTableV2 = () => {
-  const [hoveredData, setHoveredData] = useState(null);
-
   const tableHeaders = [
     { key: "started", label: "Started" },
     { key: "finished", label: "Finished" },
@@ -32,14 +49,6 @@ const WorkflowTableV2 = () => {
       return data.substring(0, MAX_TABLE_DATA_LENGTH) + "...";
     }
     return data;
-  };
-
-  const handleMouseEnter = (data) => {
-    setHoveredData(data);
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredData(null);
   };
 
   return (
@@ -91,24 +100,38 @@ const WorkflowTableV2 = () => {
                         const isTruncated =
                           cellData.length > MAX_TABLE_DATA_LENGTH;
 
+                        const handleDataClick = () => {
+                          navigator.clipboard.writeText(cellData);
+                        };
+
                         return (
                           <td
                             key={key}
                             className={`whitespace-nowrap px-3 py-4 text-sm text-gray-600 ${
                               isTruncated ? "relative cursor-pointer" : ""
                             }`}
-                            onMouseEnter={() =>
-                              isTruncated && handleMouseEnter(cellData)
-                            }
-                            onMouseLeave={() =>
-                              isTruncated && handleMouseLeave()
-                            }
                           >
-                            {isTruncated ? truncateData(cellData) : cellData}
-                            {isTruncated && hoveredData === cellData && (
-                              <div className="absolute bg-gray-100 p-2 shadow-md z-10">
-                                {cellData}
-                              </div>
+                            {isTruncated ? (
+                              <Tippy
+                                content={
+                                  <div
+                                    onClick={handleDataClick}
+                                    className="cursor-pointer"
+                                  >
+                                    {cellData}
+                                  </div>
+                                }
+                                theme="custom-tooltip"
+                                animation="scale-subtle"
+                                interactive
+                                duration={[null, 0]}
+                              >
+                                <span onClick={handleDataClick}>
+                                  {truncateData(cellData)}
+                                </span>
+                              </Tippy>
+                            ) : (
+                              cellData
                             )}
                           </td>
                         );

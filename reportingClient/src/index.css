@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.tippy-box[data-theme~="custom-tooltip"] {
+  background-color: #2563eb;
+  color: white;
+}
+
+.tippy-box[data-theme~="custom-tooltip"] .tippy-arrow {
+  color: #2563eb;
+}
