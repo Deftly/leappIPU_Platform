@@ -1,3 +1,7 @@
+import { useState } from "react";
+
+import { MAX_TABLE_DATA_LENGTH } from "../../utils/constants";
+
 const people = [
   {
     started: "5/3/2024, 5:48:35 PM",
@@ -11,6 +15,8 @@ const people = [
 ];
 
 const WorkflowTableV2 = () => {
+  const [hoveredData, setHoveredData] = useState(null);
+
   const tableHeaders = [
     { key: "started", label: "Started" },
     { key: "finished", label: "Finished" },
@@ -20,6 +26,21 @@ const WorkflowTableV2 = () => {
     { key: "status", label: "Status" },
     { key: "release", label: "Release" },
   ];
+
+  const truncateData = (data) => {
+    if (data.length > MAX_TABLE_DATA_LENGTH) {
+      return data.substring(0, MAX_TABLE_DATA_LENGTH) + "...";
+    }
+    return data;
+  };
+
+  const handleMouseEnter = (data) => {
+    setHoveredData(data);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredData(null);
+  };
 
   return (
     <div className="px-4 sm:px-6 lg:px-0">
@@ -65,14 +86,33 @@ const WorkflowTableV2 = () => {
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {people.map((person) => (
                     <tr key={person.started}>
-                      {tableHeaders.map(({ key }) => (
-                        <td
-                          key={key}
-                          className="whitespace-nowrap px-3 py-4 text-sm text-gray-600"
-                        >
-                          {person[key]}
-                        </td>
-                      ))}
+                      {tableHeaders.map(({ key }) => {
+                        const cellData = person[key];
+                        const isTruncated =
+                          cellData.length > MAX_TABLE_DATA_LENGTH;
+
+                        return (
+                          <td
+                            key={key}
+                            className={`whitespace-nowrap px-3 py-4 text-sm text-gray-600 ${
+                              isTruncated ? "relative cursor-pointer" : ""
+                            }`}
+                            onMouseEnter={() =>
+                              isTruncated && handleMouseEnter(cellData)
+                            }
+                            onMouseLeave={() =>
+                              isTruncated && handleMouseLeave()
+                            }
+                          >
+                            {isTruncated ? truncateData(cellData) : cellData}
+                            {isTruncated && hoveredData === cellData && (
+                              <div className="absolute bg-gray-100 p-2 shadow-md z-10">
+                                {cellData}
+                              </div>
+                            )}
+                          </td>
+                        );
+                      })}
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                         <a
                           href="#"
