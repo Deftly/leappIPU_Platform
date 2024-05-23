@@ -7,27 +7,15 @@ import Heading from "../ui/Heading";
 
 const Workflows = () => {
   const { isLoading, data } = useElasticsearchWorkflows();
-  // 0,
-  // "",
-  // null,
-  // null,
-  // [],
-  // [],
-  // null,
-  // null,
-
-  console.log(isLoading);
-  console.log(data);
 
   const workflows = useMemo(() => data?.workflows || [], [data]);
-  console.log(workflows);
 
   return (
     <div className="mt-1">
       <div className="flex justify-between items-end mb-8">
         <Heading as="h1">Workflows</Heading>
       </div>
-      <WorkflowTableV2 workflows={workflows} />
+      <WorkflowTableV2 workflows={workflows} isLoading={isLoading} />
     </div>
   );
 };

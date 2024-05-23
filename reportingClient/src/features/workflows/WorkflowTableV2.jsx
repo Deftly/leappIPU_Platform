@@ -6,8 +6,9 @@ import { toast } from "react-hot-toast";
 import { MAX_TABLE_DATA_LENGTH } from "../../utils/constants";
 
 import Button from "../../ui/Button";
+import Spinner from "../../ui/Spinner";
 
-const WorkflowTableV2 = ({ workflows }) => {
+const WorkflowTableV2 = ({ workflows = [], isLoading }) => {
   const tableHeaders = [
     { key: "started", label: "Started" },
     { key: "finished", label: "Finished" },
@@ -72,47 +73,69 @@ const WorkflowTableV2 = ({ workflows }) => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {workflows.map((workflow) => (
-                    <tr key={workflow.id}>
-                      {tableHeaders.map(({ key }) => {
-                        let cellData = workflow[key];
-                        if (key === "failed") {
-                          cellData = workflow.failed ? "Failed" : "Successful";
-                        }
-                        const isTruncated =
-                          cellData && cellData.length > MAX_TABLE_DATA_LENGTH;
-
-                        return (
-                          <td
-                            key={key}
-                            className="whitespace-nowrap px-3 py-4 text-sm text-gray-700"
-                          >
-                            <div
-                              onClick={() => handleDataClick(cellData)}
-                              className="cursor-pointer"
-                            >
-                              {isTruncated ? (
-                                <Tippy
-                                  content={cellData}
-                                  theme="custom-tooltip"
-                                  animation="scale-subtle"
-                                  interactive
-                                  duration={[null, 0]}
-                                >
-                                  <span>{truncateData(cellData)}</span>
-                                </Tippy>
-                              ) : (
-                                cellData
-                              )}
-                            </div>
-                          </td>
-                        );
-                      })}
-                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                        <Button size="sm">Stages</Button>
+                  {isLoading ? (
+                    <tr>
+                      <td
+                        colSpan={tableHeaders.length + 1}
+                        className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center"
+                      >
+                        <Spinner />
                       </td>
                     </tr>
-                  ))}
+                  ) : workflows.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan={tableHeaders.length + 1}
+                        className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center"
+                      >
+                        No Workflows Found
+                      </td>
+                    </tr>
+                  ) : (
+                    workflows.map((workflow) => (
+                      <tr key={workflow.id}>
+                        {tableHeaders.map(({ key }) => {
+                          let cellData = workflow[key];
+                          if (key === "failed") {
+                            cellData = workflow.failed
+                              ? "Failed"
+                              : "Successful";
+                          }
+                          const isTruncated =
+                            cellData && cellData.length > MAX_TABLE_DATA_LENGTH;
+
+                          return (
+                            <td
+                              key={key}
+                              className="whitespace-nowrap px-3 py-4 text-sm text-gray-700"
+                            >
+                              <div
+                                onClick={() => handleDataClick(cellData)}
+                                className="cursor-pointer"
+                              >
+                                {isTruncated ? (
+                                  <Tippy
+                                    content={cellData}
+                                    theme="custom-tooltip"
+                                    animation="scale-subtle"
+                                    interactive
+                                    duration={[null, 0]}
+                                  >
+                                    <span>{truncateData(cellData)}</span>
+                                  </Tippy>
+                                ) : (
+                                  cellData
+                                )}
+                              </div>
+                            </td>
+                          );
+                        })}
+                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                          <Button size="sm">Stages</Button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>

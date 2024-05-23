@@ -61,7 +61,7 @@ export function useElasticsearchWorkflows(
       });
 
       const workflows = response.hits.hits.map(mapWorkflowData);
-      const totalHits = response.hits.hits.value;
+      const totalHits = response.hits.total.value;
 
       return {
         workflows,
