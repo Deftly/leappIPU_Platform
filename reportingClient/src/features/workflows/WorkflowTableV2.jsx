@@ -5,44 +5,16 @@ import { toast } from "react-hot-toast";
 
 import { MAX_TABLE_DATA_LENGTH } from "../../utils/constants";
 
-const people = [
-  {
-    started: "5/3/2024, 5:48:35 PM",
-    finished: "5/4/2024, 12:03:54 AM",
-    hostname: "lva40besplsh5h.ecomm.devicenp.rpg",
-    region: "amrs",
-    workflow: "Inhibitor Check 8 To 8",
-    status: "Successful",
-    release: "1.17.1",
-  },
-  {
-    started: "5/4/2024, 5:48:35 PM",
-    finished: "5/4/2024, 12:03:54 AM",
-    hostname: "lva40besplsh5h.ecomm.devicenp.rpg",
-    region: "amrs",
-    workflow: "Inhibitor Check 8 To 8",
-    status: "Successful",
-    release: "1.17.1",
-  },
-  {
-    started: "5/5/2024, 5:48:35 PM",
-    finished: "5/4/2024, 12:03:54 AM",
-    hostname: "lva40besplsh5h.ecomm.devicenp.rpg",
-    region: "amrs",
-    workflow: "Inhibitor Check 8 To 8",
-    status: "Successful",
-    release: "1.17.1",
-  },
-];
+import Button from "../../ui/Button";
 
-const WorkflowTableV2 = () => {
+const WorkflowTableV2 = ({ workflows }) => {
   const tableHeaders = [
     { key: "started", label: "Started" },
     { key: "finished", label: "Finished" },
-    { key: "hostname", label: "Hostname" },
+    { key: "limit", label: "Hostname" },
     { key: "region", label: "Region" },
-    { key: "workflow", label: "Workflow" },
-    { key: "status", label: "Status" },
+    { key: "workflowType", label: "Workflow" },
+    { key: "failed", label: "Status" },
     { key: "release", label: "Release" },
   ];
 
@@ -100,17 +72,20 @@ const WorkflowTableV2 = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 bg-white">
-                  {people.map((person) => (
-                    <tr key={person.started}>
+                  {workflows.map((workflow) => (
+                    <tr key={workflow.id}>
                       {tableHeaders.map(({ key }) => {
-                        const cellData = person[key];
+                        let cellData = workflow[key];
+                        if (key === "failed") {
+                          cellData = workflow.failed ? "Failed" : "Successful";
+                        }
                         const isTruncated =
-                          cellData.length > MAX_TABLE_DATA_LENGTH;
+                          cellData && cellData.length > MAX_TABLE_DATA_LENGTH;
 
                         return (
                           <td
                             key={key}
-                            className="whitespace-nowrap px-3 py-4 text-sm text-gray-600"
+                            className="whitespace-nowrap px-3 py-4 text-sm text-gray-700"
                           >
                             <div
                               onClick={() => handleDataClick(cellData)}
@@ -134,12 +109,13 @@ const WorkflowTableV2 = () => {
                         );
                       })}
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                        <a
-                          href="#"
-                          className="text-blue-600 hover:text-blue-900"
-                        >
-                          Edit<span className="sr-only">, {person.name}</span>
-                        </a>
+                        <Button size="sm">Stages</Button>
+                        {/* <a */}
+                        {/*   href="#" */}
+                        {/*   className="text-blue-600 hover:text-blue-900" */}
+                        {/* > */}
+                        {/*   Edit<span className="sr-only">, {workflow.id}</span> */}
+                        {/* </a> */}
                       </td>
                     </tr>
                   ))}
