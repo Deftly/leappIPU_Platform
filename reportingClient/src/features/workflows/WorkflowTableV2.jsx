@@ -110,12 +110,6 @@ const WorkflowTableV2 = ({ workflows }) => {
                       })}
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                         <Button size="sm">Stages</Button>
-                        {/* <a */}
-                        {/*   href="#" */}
-                        {/*   className="text-blue-600 hover:text-blue-900" */}
-                        {/* > */}
-                        {/*   Edit<span className="sr-only">, {workflow.id}</span> */}
-                        {/* </a> */}
                       </td>
                     </tr>
                   ))}

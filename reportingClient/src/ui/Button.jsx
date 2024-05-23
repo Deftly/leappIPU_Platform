@@ -23,7 +23,7 @@ const Button = ({
     secondary:
       "text-gray-600 bg-gray-50 border border-gray-200 hover:bg-gray-100",
     danger: "text-red-100 bg-red-500 hover:bg-red-600",
-    // primary: "text-white bg-indigo-600 hover:bg-indigo-500",
+    alternate: "text-white bg-indigo-600 hover:bg-indigo-500",
     // Add more variation classes as needed
   };
 
