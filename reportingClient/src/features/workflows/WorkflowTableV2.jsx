@@ -7,6 +7,7 @@ import { MAX_TABLE_DATA_LENGTH } from "../../utils/constants";
 
 import Button from "../../ui/Button";
 import Spinner from "../../ui/Spinner";
+import StatusBadge from "../../ui/StatusBadge";
 
 const WorkflowTableV2 = ({ workflows = [], isLoading }) => {
   const tableHeaders = [
@@ -30,6 +31,8 @@ const WorkflowTableV2 = ({ workflows = [], isLoading }) => {
     navigator.clipboard.writeText(cellData);
     toast.success("Data copied to clipboard!");
   };
+
+  console.log(workflows);
 
   return (
     <div className="px-4 sm:px-6 lg:px-0">
@@ -97,9 +100,14 @@ const WorkflowTableV2 = ({ workflows = [], isLoading }) => {
                         {tableHeaders.map(({ key }) => {
                           let cellData = workflow[key];
                           if (key === "failed") {
-                            cellData = workflow.failed
-                              ? "Failed"
-                              : "Successful";
+                            return (
+                              <td
+                                key={key}
+                                className="whitespace-nowrap px-3 py-4 text-sm text-gray-700"
+                              >
+                                <StatusBadge failed={workflow.failed} />
+                              </td>
+                            );
                           }
                           const isTruncated =
                             cellData && cellData.length > MAX_TABLE_DATA_LENGTH;
