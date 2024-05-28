@@ -57,7 +57,7 @@ export function buildWorkflowsQuery(
   if (regions && regions.length > 0) {
     query.bool.must.push({
       terms: {
-        regions,
+        region: regions,
       },
     });
   }
