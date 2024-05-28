@@ -1,4 +1,5 @@
 export function buildWorkflowsQuery(
+  // TODO: Change this to be desctructured from an object so order doesn't matter
   searchQuery = "",
   startDate = null,
   endDate = null,

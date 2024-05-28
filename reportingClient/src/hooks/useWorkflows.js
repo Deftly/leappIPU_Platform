@@ -8,7 +8,7 @@ import {
 } from "../utils/constants";
 import { mapWorkflowData } from "../utils/helpers";
 
-export function useElasticsearchWorkflows(
+export function useElasticsearchWorkflows({
   pageParam = 0,
   searchQuery = "",
   startDate = null,
@@ -17,7 +17,7 @@ export function useElasticsearchWorkflows(
   workflowTypes = null,
   failed = null,
   releaseVersions = null,
-) {
+} = {}) {
   const { isLoading, data, error } = useQuery({
     queryKey: [
       "elasticsearchWorkflows",

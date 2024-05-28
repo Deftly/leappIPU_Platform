@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { DOCS_PER_PAGE } from "../utils/constants";
 import { useElasticsearchWorkflows } from "../hooks/useWorkflows";
 import WorkflowTableV2 from "../features/workflows/WorkflowTableV2";
+import RegionFilter from "../features/workflows/RegionFilter";
 
 import Heading from "../ui/Heading";
 import SearchBar from "../ui/SearchBar";
@@ -18,11 +19,15 @@ const Workflows = () => {
     parseInt(queryParams.page) || 1,
   );
   const [searchQuery, setSearchQuery] = useState(queryParams.search || "");
-
-  const { isLoading, data } = useElasticsearchWorkflows(
-    currentPage - 1,
-    searchQuery,
+  const [regions, setRegions] = useState(
+    queryParams.regions ? queryParams.regions.split(",") : [],
   );
+
+  const { isLoading, data } = useElasticsearchWorkflows({
+    pageParam: currentPage - 1,
+    searchQuery,
+    regions,
+  });
 
   const workflows = useMemo(() => data?.workflows || [], [data]);
   const totalHits = data?.totalHits || 0;
@@ -38,6 +43,11 @@ const Workflows = () => {
     const newSearchQuery = event.target.value;
     setSearchQuery(newSearchQuery);
     updateQueryParams({ search: newSearchQuery });
+  };
+
+  const handleRegionChange = (selectedRegions) => {
+    setRegions(selectedRegions);
+    updateQueryParams({ regions: selectedRegions.join(",") });
   };
 
   const updateQueryParams = (newParams) => {
@@ -60,11 +70,17 @@ const Workflows = () => {
         <Heading as="h1">Workflows</Heading>
       </div>
 
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-2">
         <SearchBar searchQuery={searchQuery} onSearch={handleSearch} />
         <Button size="md" variation="primary">
           Export
         </Button>
+      </div>
+      <div className="flex items-center justify-between mb-8">
+        <RegionFilter
+          selectedRegions={regions}
+          onRegionChange={handleRegionChange}
+        />
       </div>
 
       <WorkflowTableV2 workflows={workflows} isLoading={isLoading} />
