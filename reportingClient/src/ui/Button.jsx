@@ -2,7 +2,7 @@ import clsx from "clsx";
 
 const Button = ({
   children,
-  size = "medium",
+  size = "md",
   variation = "primary",
   className,
   ...props
