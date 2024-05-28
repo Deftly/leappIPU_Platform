@@ -12,16 +12,35 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const RegionFilter = ({ selectedRegions, onRegionChange }) => {
-  const regions = ["apac", "amrs", "emea", "dmz"]; // Example regions
+const formatWorkflowType = (workflowType) => {
+  return workflowType
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+};
+
+const WorkflowTypeFilter = ({
+  selectedWorkflowTypes,
+  onWorkflowTypeChange,
+}) => {
+  const workflowTypes = [
+    "upgrade_7_to_8",
+    "upgrade_7_to_9",
+    "upgrade_8_to_9",
+    "operational_check_7_to_8",
+    "operational_check_7_to_9",
+    "operational_check_8_to_9",
+    "inhibitor_check_7_to_8",
+    "inhibitor_check_7_to_9",
+    "inhibitor_check_8_to_9",
+  ];
   const dropdownRef = useRef(null);
 
   const handleChange = (event) => {
     const { value, checked } = event.target;
-    const updatedRegions = checked
-      ? [...selectedRegions, value]
-      : selectedRegions.filter((region) => region !== value);
-    onRegionChange(updatedRegions);
+    const updatedWorkflowTypes = checked
+      ? [...selectedWorkflowTypes, value]
+      : selectedWorkflowTypes.filter((type) => type !== value);
+    onWorkflowTypeChange(updatedWorkflowTypes);
   };
 
   const handleClickOutside = (event) => {
@@ -39,11 +58,11 @@ const RegionFilter = ({ selectedRegions, onRegionChange }) => {
   }, []);
 
   const selectAll = () => {
-    onRegionChange(regions);
+    onWorkflowTypeChange(workflowTypes);
   };
 
   const deselectAll = () => {
-    onRegionChange([]);
+    onWorkflowTypeChange([]);
   };
 
   return (
@@ -55,12 +74,14 @@ const RegionFilter = ({ selectedRegions, onRegionChange }) => {
       <div>
         <MenuButton
           className={`inline-flex w-full justify-between gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 ${
-            selectedRegions.length === 0 ? "text-gray-500" : "text-gray-900"
+            selectedWorkflowTypes.length === 0
+              ? "text-gray-500"
+              : "text-gray-900"
           }`}
         >
-          {selectedRegions.length > 0
-            ? selectedRegions.map((region) => region.toUpperCase()).join(", ")
-            : "Select Region"}
+          {selectedWorkflowTypes.length > 0
+            ? selectedWorkflowTypes.map(formatWorkflowType).join(", ")
+            : "Select Workflow Type"}
           <ChevronDownIcon
             className="-mr-1 h-5 w-5 text-gray-400"
             aria-hidden="true"
@@ -101,23 +122,23 @@ const RegionFilter = ({ selectedRegions, onRegionChange }) => {
                 </button>
               </div>
             </div>
-            {regions.map((region) => (
-              <MenuItem key={region}>
-                {({ active }) => (
+            {workflowTypes.map((type) => (
+              <MenuItem key={type}>
+                {({ focus }) => (
                   <label
                     className={classNames(
-                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                      focus ? "bg-gray-100 text-gray-900" : "text-gray-700",
                       "block px-4 py-2 text-sm cursor-pointer",
                     )}
                   >
                     <input
                       type="checkbox"
-                      value={region}
-                      checked={selectedRegions.includes(region)}
+                      value={type}
+                      checked={selectedWorkflowTypes.includes(type)}
                       onChange={handleChange}
                       className="form-checkbox h-4 w-4 text-blue-500 transition duration-150 ease-in-out mr-2"
                     />
-                    {region.toUpperCase()}
+                    {formatWorkflowType(type)}
                   </label>
                 )}
               </MenuItem>
@@ -129,4 +150,4 @@ const RegionFilter = ({ selectedRegions, onRegionChange }) => {
   );
 };
 
-export default RegionFilter;
+export default WorkflowTypeFilter;

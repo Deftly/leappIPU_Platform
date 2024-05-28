@@ -5,6 +5,7 @@ import { DOCS_PER_PAGE } from "../utils/constants";
 import { useElasticsearchWorkflows } from "../hooks/useWorkflows";
 import WorkflowTableV2 from "../features/workflows/WorkflowTableV2";
 import RegionFilter from "../features/workflows/RegionFilter";
+import WorkflowTypeFilter from "../features/workflows/WorkflowTypeFilter";
 
 import Heading from "../ui/Heading";
 import SearchBar from "../ui/SearchBar";
@@ -15,6 +16,7 @@ const Workflows = () => {
   const navigate = useNavigate();
   const queryParams = useQueryParams();
 
+  // State variables
   const [currentPage, setCurrentPage] = useState(
     parseInt(queryParams.page) || 1,
   );
@@ -22,11 +24,15 @@ const Workflows = () => {
   const [regions, setRegions] = useState(
     queryParams.regions ? queryParams.regions.split(",") : [],
   );
+  const [workflowTypes, setWorkflowTypes] = useState(
+    queryParams.workflowTypes ? queryParams.workflowTypes.split(",") : [],
+  );
 
   const { isLoading, data } = useElasticsearchWorkflows({
     pageParam: currentPage - 1,
     searchQuery,
     regions,
+    workflowTypes,
   });
 
   const workflows = useMemo(() => data?.workflows || [], [data]);
@@ -48,6 +54,11 @@ const Workflows = () => {
   const handleRegionChange = (selectedRegions) => {
     setRegions(selectedRegions);
     updateQueryParams({ regions: selectedRegions.join(",") });
+  };
+
+  const handleWorkflowTypeChange = (selectedWorkflowTypes) => {
+    setWorkflowTypes(selectedWorkflowTypes);
+    updateQueryParams({ workflowTypes: selectedWorkflowTypes.join(",") });
   };
 
   const updateQueryParams = (newParams) => {
@@ -76,10 +87,14 @@ const Workflows = () => {
           Export
         </Button>
       </div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-start space-x-4 mb-8">
         <RegionFilter
           selectedRegions={regions}
           onRegionChange={handleRegionChange}
+        />
+        <WorkflowTypeFilter
+          selectedWorkflowTypes={workflowTypes}
+          onWorkflowTypeChange={handleWorkflowTypeChange}
         />
       </div>
 
