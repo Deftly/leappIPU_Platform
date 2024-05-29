@@ -11,6 +11,7 @@ import {
   startOfWeek,
   endOfWeek,
   isSameDay,
+  addMonths,
 } from "date-fns";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
@@ -22,11 +23,27 @@ const defineds = {
   startOfYesterday: startOfDay(addDays(new Date(), -1)),
   endOfYesterday: endOfDay(addDays(new Date(), -1)),
   startOfWeek: startOfWeek(new Date()),
-  endOfWeek: endOfWeek(new Date()),
+  endOfWeek:
+    endOfWeek(new Date()) < new Date() ? endOfWeek(new Date()) : new Date(),
   startOfLastWeek: startOfWeek(addDays(new Date(), -7)),
-  endOfLastWeek: endOfWeek(addDays(new Date(), -7)),
+  endOfLastWeek:
+    endOfWeek(addDays(new Date(), -7)) < new Date()
+      ? endOfWeek(addDays(new Date(), -7))
+      : new Date(),
   startOfMonth: startOfMonth(new Date()),
-  endOfMonth: endOfMonth(new Date()),
+  endOfMonth:
+    endOfMonth(new Date()) < new Date() ? endOfMonth(new Date()) : new Date(),
+  startOfLastMonth: startOfMonth(addMonths(new Date(), -1)),
+  endOfLastMonth:
+    endOfMonth(addMonths(new Date(), -1)) < new Date()
+      ? endOfMonth(addMonths(new Date(), -1))
+      : new Date(),
+  startOfLast3Months: startOfMonth(addMonths(new Date(), -3)),
+  endOfLast3Months:
+    endOfMonth(new Date()) < new Date() ? endOfMonth(new Date()) : new Date(),
+  startOfLast6Months: startOfMonth(addMonths(new Date(), -6)),
+  endOfLast6Months:
+    endOfMonth(new Date()) < new Date() ? endOfMonth(new Date()) : new Date(),
 };
 
 const staticRangeHandler = {
@@ -78,6 +95,27 @@ const staticRanges = createStaticRanges([
     range: () => ({
       startDate: defineds.startOfMonth,
       endDate: defineds.endOfMonth,
+    }),
+  },
+  {
+    label: "Last Month",
+    range: () => ({
+      startDate: defineds.startOfLastMonth,
+      endDate: defineds.endOfLastMonth,
+    }),
+  },
+  {
+    label: "Last 3 Months",
+    range: () => ({
+      startDate: defineds.startOfLast3Months,
+      endDate: defineds.endOfLast3Months,
+    }),
+  },
+  {
+    label: "Last 6 Months",
+    range: () => ({
+      startDate: defineds.startOfLast6Months,
+      endDate: defineds.endOfLast6Months,
     }),
   },
 ]);
