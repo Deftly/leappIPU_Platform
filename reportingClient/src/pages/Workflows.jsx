@@ -36,6 +36,9 @@ const Workflows = () => {
   const [startDate, setStartDate] = useState(queryParams.startDate || null);
   const [endDate, setEndDate] = useState(queryParams.endDate || null);
 
+  console.log(startDate);
+  console.log(endDate);
+
   const { isLoading, data } = useElasticsearchWorkflows({
     pageParam: currentPage - 1,
     searchQuery,
@@ -81,13 +84,20 @@ const Workflows = () => {
   const handleDateChange = ({ startDate, endDate }) => {
     setStartDate(startDate);
     setEndDate(endDate);
-    if (startDate && endDate) {
-      const updatedQueryParams = {
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString(),
-      };
-      updateQueryParams(updatedQueryParams);
+    const updatedQueryParams = {};
+    if (
+      startDate instanceof Date &&
+      !isNaN(startDate) &&
+      endDate instanceof Date &&
+      !isNaN(endDate)
+    ) {
+      updatedQueryParams.startDate = startDate.toISOString();
+      updatedQueryParams.endDate = endDate.toISOString();
+    } else {
+      updatedQueryParams.startDate = null;
+      updatedQueryParams.endDate = null;
     }
+    updateQueryParams(updatedQueryParams);
   };
 
   const updateQueryParams = (newParams) => {

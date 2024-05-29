@@ -139,8 +139,6 @@ const DateRangeFilter = ({ onDateChange, startDate, endDate }) => {
     },
   ]);
 
-  // TODO: Filter should only be applied after both dates are set
-  // TODO: Setting the start should not change the end date
   const handleDateChange = (item) => {
     const { startDate, endDate } = item.selection;
 
@@ -149,7 +147,7 @@ const DateRangeFilter = ({ onDateChange, startDate, endDate }) => {
       setState([
         {
           startDate: null,
-          endDate: defineds.endOfToday,
+          endDate: null,
           key: "selection",
         },
       ]);
