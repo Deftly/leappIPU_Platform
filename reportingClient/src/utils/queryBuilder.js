@@ -45,11 +45,14 @@ export function buildWorkflowsQuery(
   }
 
   if (startDate && endDate) {
+    const inclusiveEndDate = new Date(endDate);
+    inclusiveEndDate.setDate(inclusiveEndDate.getDate() + 1);
+
     query.bool.must.push({
       range: {
         started: {
           gte: startDate.toISOString(),
-          lte: endDate.toISOString(),
+          lt: inclusiveEndDate.toISOString(),
         },
       },
     });

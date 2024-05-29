@@ -33,8 +33,8 @@ const Workflows = () => {
   const [failed, setFailed] = useState(
     queryParams.failed === undefined ? null : queryParams.failed === "true",
   );
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [startDate, setStartDate] = useState(queryParams.startDate || null);
+  const [endDate, setEndDate] = useState(queryParams.endDate || null);
 
   const { isLoading, data } = useElasticsearchWorkflows({
     pageParam: currentPage - 1,
@@ -78,19 +78,15 @@ const Workflows = () => {
     updateQueryParams({ failed: selectedStatus });
   };
 
-  const handleDateRangeChange = (dates) => {
-    if (dates && dates.length === 2) {
-      const [start, end] = dates;
-      setStartDate(start);
-      setEndDate(end);
-      updateQueryParams({
-        startDate: start ? moment(start).format("YYYY-MM-DD") : null,
-        endDate: end ? moment(end).format("YYYY-MM-DD") : null,
-      });
-    } else {
-      setStartDate(null);
-      setEndDate(null);
-      updateQueryParams({ startDate: null, endDate: null });
+  const handleDateChange = ({ startDate, endDate }) => {
+    setStartDate(startDate);
+    setEndDate(endDate);
+    if (startDate && endDate) {
+      const updatedQueryParams = {
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+      };
+      updateQueryParams(updatedQueryParams);
     }
   };
 
@@ -133,7 +129,11 @@ const Workflows = () => {
           selectedStatus={failed}
           onStatusChange={handleFailedChange}
         />
-        <DateRangeFilter onDateRangeChange={handleDateRangeChange} />
+        <DateRangeFilter
+          onDateChange={handleDateChange}
+          startDate={startDate}
+          endDate={endDate}
+        />
       </div>
 
       <WorkflowTableV2 workflows={workflows} isLoading={isLoading} />
@@ -153,7 +153,12 @@ const useQueryParams = () => {
   const searchParams = new URLSearchParams(location.search);
   const queryParams = {};
   for (const [key, value] of searchParams.entries()) {
-    queryParams[key] = value;
+    if (key === "startDate" || key === "endDate") {
+      const date = moment(value);
+      queryParams[key] = date.isValid() ? date.toDate() : null;
+    } else {
+      queryParams[key] = value;
+    }
   }
   return queryParams;
 };

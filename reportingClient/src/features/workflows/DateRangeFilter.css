@@ -1,0 +1,9 @@
+.date-range-filter .rdrDefinedRangesWrapper {
+  display: flex;
+  flex-direction: column;
+  margin-left: 1rem;
+}
+
+.date-range-filter .rdrCalendarWrapper {
+  margin-right: 1rem;
+}
