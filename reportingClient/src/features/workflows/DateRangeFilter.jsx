@@ -118,6 +118,13 @@ const staticRanges = createStaticRanges([
       endDate: defineds.endOfLast6Months,
     }),
   },
+  {
+    label: "Clear",
+    range: () => ({
+      startDate: null,
+      endDate: null,
+    }),
+  },
 ]);
 
 const DateRangeFilter = ({ onDateChange, startDate, endDate }) => {
@@ -127,7 +134,7 @@ const DateRangeFilter = ({ onDateChange, startDate, endDate }) => {
   const [state, setState] = useState([
     {
       startDate: startDate || null,
-      endDate: endDate || null,
+      endDate: endDate || defineds.endOfToday,
       key: "selection",
     },
   ]);
@@ -136,22 +143,35 @@ const DateRangeFilter = ({ onDateChange, startDate, endDate }) => {
   // TODO: Setting the start should not change the end date
   const handleDateChange = (item) => {
     const { startDate, endDate } = item.selection;
-    let newEndDate = endDate;
 
-    if (startDate && !endDate) {
-      newEndDate = state[0].endDate; // Keep the previous end date if it exists
-    }
+    if (startDate === null && endDate === null) {
+      // Clear the date range filter
+      setState([
+        {
+          startDate: null,
+          endDate: defineds.endOfToday,
+          key: "selection",
+        },
+      ]);
+      onDateChange({ startDate: null, endDate: null });
+    } else {
+      let newEndDate = endDate;
 
-    setState([
-      {
-        startDate: startDate,
-        endDate: newEndDate,
-        key: "selection",
-      },
-    ]);
+      if (startDate && !endDate) {
+        newEndDate = state[0].endDate;
+      }
 
-    if (startDate && newEndDate) {
-      onDateChange({ startDate, endDate: newEndDate });
+      setState([
+        {
+          startDate: startDate,
+          endDate: newEndDate,
+          key: "selection",
+        },
+      ]);
+
+      if (startDate && newEndDate) {
+        onDateChange({ startDate, endDate: newEndDate });
+      }
     }
   };
 
@@ -203,6 +223,7 @@ const DateRangeFilter = ({ onDateChange, startDate, endDate }) => {
             onChange={handleDateChange}
             showSelectionPreview={true}
             moveRangeOnFirstSelection={false}
+            retainEndDateOnFirstSelection={true}
             months={2}
             ranges={state}
             direction="horizontal"
