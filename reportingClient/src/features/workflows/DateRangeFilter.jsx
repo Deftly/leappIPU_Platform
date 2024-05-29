@@ -2,9 +2,85 @@ import { useState, useRef, useEffect, Fragment } from "react";
 import { DateRangePicker } from "react-date-range";
 import { CalendarIcon } from "@heroicons/react/20/solid";
 import { Transition } from "@headlessui/react";
+import {
+  addDays,
+  endOfDay,
+  startOfDay,
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
+  endOfWeek,
+  isSameDay,
+} from "date-fns";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import "./DateRangeFilter.css";
+
+const defineds = {
+  startOfToday: startOfDay(new Date()),
+  endOfToday: endOfDay(new Date()),
+  startOfYesterday: startOfDay(addDays(new Date(), -1)),
+  endOfYesterday: endOfDay(addDays(new Date(), -1)),
+  startOfWeek: startOfWeek(new Date()),
+  endOfWeek: endOfWeek(new Date()),
+  startOfLastWeek: startOfWeek(addDays(new Date(), -7)),
+  endOfLastWeek: endOfWeek(addDays(new Date(), -7)),
+  startOfMonth: startOfMonth(new Date()),
+  endOfMonth: endOfMonth(new Date()),
+};
+
+const staticRangeHandler = {
+  range: {},
+  isSelected(range) {
+    const definedRange = this.range();
+    return (
+      isSameDay(range.startDate, definedRange.startDate) &&
+      isSameDay(range.endDate, definedRange.endDate)
+    );
+  },
+};
+
+function createStaticRanges(ranges) {
+  return ranges.map((range) => ({ ...staticRangeHandler, ...range }));
+}
+
+const staticRanges = createStaticRanges([
+  {
+    label: "Today",
+    range: () => ({
+      startDate: defineds.startOfToday,
+      endDate: defineds.endOfToday,
+    }),
+  },
+  {
+    label: "Yesterday",
+    range: () => ({
+      startDate: defineds.startOfYesterday,
+      endDate: defineds.endOfYesterday,
+    }),
+  },
+  {
+    label: "This Week",
+    range: () => ({
+      startDate: defineds.startOfWeek,
+      endDate: defineds.endOfWeek,
+    }),
+  },
+  {
+    label: "Last Week",
+    range: () => ({
+      startDate: defineds.startOfLastWeek,
+      endDate: defineds.endOfLastWeek,
+    }),
+  },
+  {
+    label: "This Month",
+    range: () => ({
+      startDate: defineds.startOfMonth,
+      endDate: defineds.endOfMonth,
+    }),
+  },
+]);
 
 const DateRangeFilter = ({ onDateChange, startDate, endDate }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,15 +130,6 @@ const DateRangeFilter = ({ onDateChange, startDate, endDate }) => {
     };
   }, []);
 
-  const inputRanges = [
-    "today",
-    "yesterday",
-    "thisWeek",
-    "lastWeek",
-    "thisMonth",
-    "lastMonth",
-  ];
-
   return (
     <div ref={containerRef} className="relative">
       <div
@@ -103,7 +170,8 @@ const DateRangeFilter = ({ onDateChange, startDate, endDate }) => {
             direction="horizontal"
             rangeColors={["#3B82F6"]}
             maxDate={new Date()}
-            inputRanges={inputRanges}
+            staticRanges={staticRanges}
+            inputRanges={[]}
             showDateDisplay={false}
           />
         </div>
