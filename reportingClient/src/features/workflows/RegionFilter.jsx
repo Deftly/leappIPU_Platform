@@ -1,4 +1,4 @@
-import { useEffect, useRef, Fragment } from "react";
+import { useMemo, useEffect, useRef, Fragment } from "react";
 import {
   Menu,
   MenuItems,
@@ -46,6 +46,21 @@ const RegionFilter = ({ selectedRegions, onRegionChange }) => {
     onRegionChange([]);
   };
 
+  const displayText = useMemo(() => {
+    if (selectedRegions.length === 0) {
+      return "Select Region";
+    } else if (selectedRegions.length === regions.length) {
+      return "All Regions";
+    } else {
+      const selectedText = selectedRegions
+        .map((region) => region.toUpperCase())
+        .join(", ");
+      return selectedText.length > 20
+        ? `${selectedText.slice(0, 20)}...`
+        : selectedText;
+    }
+  }, [selectedRegions, regions.length]);
+
   return (
     <Menu
       as="div"
@@ -58,9 +73,7 @@ const RegionFilter = ({ selectedRegions, onRegionChange }) => {
             selectedRegions.length === 0 ? "text-gray-500" : "text-gray-900"
           }`}
         >
-          {selectedRegions.length > 0
-            ? selectedRegions.map((region) => region.toUpperCase()).join(", ")
-            : "Select Region"}
+          {displayText}
           <ChevronDownIcon
             className="-mr-1 h-5 w-5 text-gray-400"
             aria-hidden="true"

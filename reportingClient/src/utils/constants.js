@@ -1,5 +1,6 @@
 export const REFRESH_TIME_MS = 20 * 60 * 1000;
 export const MAX_TABLE_DATA_LENGTH = 24;
+export const FILTER_TEXT_LENGTH = 24;
 export const DOCS_PER_PAGE = 8;
 
 export const WORKFLOW_FIELDS = [

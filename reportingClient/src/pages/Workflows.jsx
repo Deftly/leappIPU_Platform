@@ -6,6 +6,7 @@ import { useElasticsearchWorkflows } from "../hooks/useWorkflows";
 import WorkflowTableV2 from "../features/workflows/WorkflowTableV2";
 import RegionFilter from "../features/workflows/RegionFilter";
 import WorkflowTypeFilter from "../features/workflows/WorkflowTypeFilter";
+import StatusFilter from "../features/workflows/StatusFilter";
 
 import Heading from "../ui/Heading";
 import SearchBar from "../ui/SearchBar";
@@ -27,17 +28,22 @@ const Workflows = () => {
   const [workflowTypes, setWorkflowTypes] = useState(
     queryParams.workflowTypes ? queryParams.workflowTypes.split(",") : [],
   );
+  const [failed, setFailed] = useState(
+    queryParams.failed === undefined ? null : queryParams.failed === "true",
+  );
 
   const { isLoading, data } = useElasticsearchWorkflows({
     pageParam: currentPage - 1,
     searchQuery,
     regions,
     workflowTypes,
+    failed,
   });
 
   const workflows = useMemo(() => data?.workflows || [], [data]);
   const totalHits = data?.totalHits || 0;
 
+  // Handle functions
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
     const newSearchParams = new URLSearchParams(queryParams);
@@ -59,6 +65,11 @@ const Workflows = () => {
   const handleWorkflowTypeChange = (selectedWorkflowTypes) => {
     setWorkflowTypes(selectedWorkflowTypes);
     updateQueryParams({ workflowTypes: selectedWorkflowTypes.join(",") });
+  };
+
+  const handleFailedChange = (selectedStatus) => {
+    setFailed(selectedStatus);
+    updateQueryParams({ failed: selectedStatus });
   };
 
   const updateQueryParams = (newParams) => {
@@ -95,6 +106,10 @@ const Workflows = () => {
         <WorkflowTypeFilter
           selectedWorkflowTypes={workflowTypes}
           onWorkflowTypeChange={handleWorkflowTypeChange}
+        />
+        <StatusFilter
+          selectedStatus={failed}
+          onStatusChange={handleFailedChange}
         />
       </div>
 

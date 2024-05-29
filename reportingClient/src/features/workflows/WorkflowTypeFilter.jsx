@@ -1,4 +1,4 @@
-import { useEffect, useRef, Fragment } from "react";
+import { useMemo, useEffect, useRef, Fragment } from "react";
 import {
   Menu,
   MenuItems,
@@ -7,6 +7,8 @@ import {
   Transition,
 } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+
+import { FILTER_TEXT_LENGTH } from "../../utils/constants";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -65,6 +67,21 @@ const WorkflowTypeFilter = ({
     onWorkflowTypeChange([]);
   };
 
+  const displayText = useMemo(() => {
+    if (selectedWorkflowTypes.length === 0) {
+      return "Select Workflow Type";
+    } else if (selectedWorkflowTypes.length === workflowTypes.length) {
+      return "All Workflow Types";
+    } else {
+      const selectedText = selectedWorkflowTypes
+        .map(formatWorkflowType)
+        .join(", ");
+      return selectedText.length > FILTER_TEXT_LENGTH
+        ? `${selectedText.slice(0, FILTER_TEXT_LENGTH)}...`
+        : selectedText;
+    }
+  }, [selectedWorkflowTypes, workflowTypes.length]);
+
   return (
     <Menu
       as="div"
@@ -79,9 +96,7 @@ const WorkflowTypeFilter = ({
               : "text-gray-900"
           }`}
         >
-          {selectedWorkflowTypes.length > 0
-            ? selectedWorkflowTypes.map(formatWorkflowType).join(", ")
-            : "Select Workflow Type"}
+          {displayText}
           <ChevronDownIcon
             className="-mr-1 h-5 w-5 text-gray-400"
             aria-hidden="true"
