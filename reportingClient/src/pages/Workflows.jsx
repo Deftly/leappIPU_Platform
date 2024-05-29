@@ -100,6 +100,26 @@ const Workflows = () => {
     updateQueryParams(updatedQueryParams);
   };
 
+  const handleResetFilters = () => {
+    setSearchQuery("");
+    setRegions([]);
+    setWorkflowTypes([]);
+    setFailed(null);
+    setStartDate(null);
+    setEndDate(null);
+    setCurrentPage(1);
+
+    updateQueryParams({
+      search: null,
+      regions: null,
+      workflowTypes: null,
+      failed: null,
+      startDate: null,
+      endDate: null,
+      page: null,
+    });
+  };
+
   const updateQueryParams = (newParams) => {
     const newSearchParams = new URLSearchParams(queryParams);
     Object.entries(newParams).forEach(([key, value]) => {
@@ -144,6 +164,9 @@ const Workflows = () => {
           startDate={startDate}
           endDate={endDate}
         />
+        <Button onClick={handleResetFilters} size="md">
+          Reset Filters
+        </Button>
       </div>
 
       <WorkflowTableV2 workflows={workflows} isLoading={isLoading} />
