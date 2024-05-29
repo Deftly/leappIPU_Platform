@@ -32,7 +32,7 @@ const WorkflowTableV2 = ({ workflows = [], isLoading }) => {
     toast.success("Data copied to clipboard!");
   };
 
-  console.log(workflows);
+  // console.log(workflows);
 
   return (
     <div className="px-4 sm:px-6 lg:px-0">

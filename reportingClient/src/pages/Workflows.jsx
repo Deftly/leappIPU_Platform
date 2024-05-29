@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import moment from "moment";
 
 import { DOCS_PER_PAGE } from "../utils/constants";
 import { useElasticsearchWorkflows } from "../hooks/useWorkflows";
@@ -7,6 +8,7 @@ import WorkflowTableV2 from "../features/workflows/WorkflowTableV2";
 import RegionFilter from "../features/workflows/RegionFilter";
 import WorkflowTypeFilter from "../features/workflows/WorkflowTypeFilter";
 import StatusFilter from "../features/workflows/StatusFilter";
+import DateRangeFilter from "../features/workflows/DateRangeFilter";
 
 import Heading from "../ui/Heading";
 import SearchBar from "../ui/SearchBar";
@@ -31,6 +33,8 @@ const Workflows = () => {
   const [failed, setFailed] = useState(
     queryParams.failed === undefined ? null : queryParams.failed === "true",
   );
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   const { isLoading, data } = useElasticsearchWorkflows({
     pageParam: currentPage - 1,
@@ -38,6 +42,8 @@ const Workflows = () => {
     regions,
     workflowTypes,
     failed,
+    startDate,
+    endDate,
   });
 
   const workflows = useMemo(() => data?.workflows || [], [data]);
@@ -70,6 +76,22 @@ const Workflows = () => {
   const handleFailedChange = (selectedStatus) => {
     setFailed(selectedStatus);
     updateQueryParams({ failed: selectedStatus });
+  };
+
+  const handleDateRangeChange = (dates) => {
+    if (dates && dates.length === 2) {
+      const [start, end] = dates;
+      setStartDate(start);
+      setEndDate(end);
+      updateQueryParams({
+        startDate: start ? moment(start).format("YYYY-MM-DD") : null,
+        endDate: end ? moment(end).format("YYYY-MM-DD") : null,
+      });
+    } else {
+      setStartDate(null);
+      setEndDate(null);
+      updateQueryParams({ startDate: null, endDate: null });
+    }
   };
 
   const updateQueryParams = (newParams) => {
@@ -111,6 +133,7 @@ const Workflows = () => {
           selectedStatus={failed}
           onStatusChange={handleFailedChange}
         />
+        <DateRangeFilter onDateRangeChange={handleDateRangeChange} />
       </div>
 
       <WorkflowTableV2 workflows={workflows} isLoading={isLoading} />
