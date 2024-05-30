@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale-subtle.css";
@@ -10,6 +11,8 @@ import Spinner from "../../ui/Spinner";
 import StatusBadge from "../../ui/StatusBadge";
 
 const WorkflowTableV2 = ({ workflows = [], isLoading }) => {
+  const navigate = useNavigate();
+
   const tableHeaders = [
     { key: "started", label: "Started" },
     { key: "finished", label: "Finished" },
@@ -31,8 +34,6 @@ const WorkflowTableV2 = ({ workflows = [], isLoading }) => {
     navigator.clipboard.writeText(cellData);
     toast.success("Data copied to clipboard!");
   };
-
-  // console.log(workflows);
 
   return (
     <div className="px-4 sm:px-6 lg:px-0">
@@ -124,7 +125,19 @@ const WorkflowTableV2 = ({ workflows = [], isLoading }) => {
                           );
                         })}
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <Button size="sm">Stages</Button>
+                          <Button
+                            size="sm"
+                            onClick={() =>
+                              navigate(
+                                `/workflows/${workflow.limit}/${workflow.txId}/stages`,
+                                {
+                                  state: { workflow },
+                                },
+                              )
+                            }
+                          >
+                            Stages
+                          </Button>
                         </td>
                       </tr>
                     ))
