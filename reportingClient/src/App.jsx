@@ -3,11 +3,12 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
-import Dashboard from "./pages/Dashboard";
+// import Dashboard from "./pages/Dashboard";
 import Workflows from "./pages/Workflows";
-import Hosts from "./pages/Hosts";
-import Faq from "./pages/FAQ";
+// import Hosts from "./pages/Hosts";
+// import Faq from "./pages/FAQ";
 import PageNotFound from "./pages/PageNotFound";
+import UnderConstruction from "./pages/UnderConstruction";
 
 import AppLayout from "./ui/AppLayout";
 
@@ -26,14 +27,17 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route index element={<Dashboard />} />
+            {/* <Route index element={<Dashboard />} /> */}
+            <Route index element={<UnderConstruction />} />
             <Route path="workflows" element={<Workflows />} />
             <Route
               path="workflows/:hostname/:txId/stages"
               element={<div>Workflow stages</div>}
             />
-            <Route path="hosts" element={<Hosts />} />
-            <Route path="FAQ" element={<Faq />} />
+            <Route path="hosts" element={<UnderConstruction />} />
+            <Route path="FAQ" element={<UnderConstruction />} />
+            {/* <Route path="hosts" element={<Hosts />} /> */}
+            {/* <Route path="FAQ" element={<Faq />} /> */}
           </Route>
           <Route path="*" element={<PageNotFound />} />
         </Routes>
