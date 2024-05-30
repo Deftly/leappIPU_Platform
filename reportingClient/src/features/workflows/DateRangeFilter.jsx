@@ -186,6 +186,16 @@ const DateRangeFilter = ({ onDateChange, startDate, endDate }) => {
     };
   }, []);
 
+  useEffect(() => {
+    setState([
+      {
+        startDate: startDate || null,
+        endDate: endDate || defineds.endOfToday,
+        key: "selection",
+      },
+    ]);
+  }, [startDate, endDate]);
+
   return (
     <div ref={containerRef} className="relative">
       <div
