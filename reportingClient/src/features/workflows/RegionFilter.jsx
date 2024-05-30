@@ -1,13 +1,14 @@
 import { useState, useMemo, useEffect, useRef, Fragment } from "react";
 import { Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import useRegionOptions from "../../hooks/useRegionOptions";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 const RegionFilter = ({ selectedRegions, onRegionChange }) => {
-  const regions = ["apac", "amrs", "emea", "dmz"]; // Example regions
+  const { regions, isLoading, error } = useRegionOptions(); // Use the custom hook
   const dropdownRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -37,7 +38,9 @@ const RegionFilter = ({ selectedRegions, onRegionChange }) => {
   };
 
   const selectAll = () => {
-    onRegionChange(regions);
+    if (regions) {
+      onRegionChange(regions);
+    }
   };
 
   const deselectAll = () => {
@@ -45,9 +48,11 @@ const RegionFilter = ({ selectedRegions, onRegionChange }) => {
   };
 
   const displayText = useMemo(() => {
-    if (selectedRegions.length === 0) {
+    if (isLoading) {
+      return "Loading regions...";
+    } else if (selectedRegions.length === 0) {
       return "Select Region";
-    } else if (selectedRegions.length === regions.length) {
+    } else if (regions && selectedRegions.length === regions.length) {
       return "All Regions";
     } else {
       const selectedText = selectedRegions
@@ -57,7 +62,11 @@ const RegionFilter = ({ selectedRegions, onRegionChange }) => {
         ? `${selectedText.slice(0, 20)}...`
         : selectedText;
     }
-  }, [selectedRegions, regions.length]);
+  }, [selectedRegions, regions, isLoading]);
+
+  if (error) {
+    return <div>Error loading regions.</div>;
+  }
 
   return (
     <div ref={dropdownRef} className="relative inline-block text-left">
@@ -87,53 +96,56 @@ const RegionFilter = ({ selectedRegions, onRegionChange }) => {
       >
         <div className="absolute left-0 z-10 mt-2 w-56 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
-            <div className="flex justify-between px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900">
-              <div>
-                <button
-                  type="button"
-                  onClick={selectAll}
-                  className="text-blue-500 hover:text-blue-700 focus:outline-none"
-                >
-                  All
-                </button>
-                <span className="mx-2">|</span>
-                <button
-                  type="button"
-                  onClick={deselectAll}
-                  className="text-blue-500 hover:text-blue-700 focus:outline-none"
-                >
-                  None
-                </button>
+            {regions && (
+              <div className="flex justify-between px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900">
+                <div>
+                  <button
+                    type="button"
+                    onClick={selectAll}
+                    className="text-blue-500 hover:text-blue-700 focus:outline-none"
+                  >
+                    All
+                  </button>
+                  <span className="mx-2">|</span>
+                  <button
+                    type="button"
+                    onClick={deselectAll}
+                    className="text-blue-500 hover:text-blue-700 focus:outline-none"
+                  >
+                    None
+                  </button>
+                </div>
               </div>
-            </div>
-            {regions.map((region) => (
-              <div
-                key={region}
-                className={classNames(
-                  "block px-4 py-2 text-sm cursor-pointer",
-                  selectedRegions.includes(region)
-                    ? "bg-gray-100 text-gray-900"
-                    : "text-gray-700",
-                )}
-                onClick={() =>
-                  handleChange({
-                    target: {
-                      value: region,
-                      checked: !selectedRegions.includes(region),
-                    },
-                  })
-                }
-              >
-                <input
-                  type="checkbox"
-                  value={region}
-                  checked={selectedRegions.includes(region)}
-                  onChange={handleChange}
-                  className="form-checkbox h-4 w-4 text-blue-500 transition duration-150 ease-in-out mr-2"
-                />
-                {region.toUpperCase()}
-              </div>
-            ))}
+            )}
+            {regions &&
+              regions.map((region) => (
+                <div
+                  key={region}
+                  className={classNames(
+                    "block px-4 py-2 text-sm cursor-pointer",
+                    selectedRegions.includes(region)
+                      ? "bg-gray-100 text-gray-900"
+                      : "text-gray-700",
+                  )}
+                  onClick={() =>
+                    handleChange({
+                      target: {
+                        value: region,
+                        checked: !selectedRegions.includes(region),
+                      },
+                    })
+                  }
+                >
+                  <input
+                    type="checkbox"
+                    value={region}
+                    checked={selectedRegions.includes(region)}
+                    onChange={handleChange}
+                    className="form-checkbox h-4 w-4 text-blue-500 transition duration-150 ease-in-out mr-2"
+                  />
+                  {region.toUpperCase()}
+                </div>
+              ))}
           </div>
         </div>
       </Transition>

@@ -1,6 +1,7 @@
 import { useMemo, useEffect, useRef, Fragment, useState } from "react";
 import { Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import useWorkflowTypeOptions from "../../hooks/useWorkflowTypeOptions"; // Import the custom hook
 
 import { FILTER_TEXT_LENGTH } from "../../utils/constants";
 
@@ -18,17 +19,7 @@ const WorkflowTypeFilter = ({
   selectedWorkflowTypes,
   onWorkflowTypeChange,
 }) => {
-  const workflowTypes = [
-    "upgrade_7_to_8",
-    "upgrade_7_to_9",
-    "upgrade_8_to_9",
-    "operational_check_7_to_8",
-    "operational_check_7_to_9",
-    "operational_check_8_to_9",
-    "inhibitor_check_7_to_8",
-    "inhibitor_check_7_to_9",
-    "inhibitor_check_8_to_9",
-  ];
+  const { workflowTypes, isLoading, error } = useWorkflowTypeOptions(); // Use the custom hook
   const dropdownRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -58,7 +49,9 @@ const WorkflowTypeFilter = ({
   };
 
   const selectAll = () => {
-    onWorkflowTypeChange(workflowTypes);
+    if (workflowTypes) {
+      onWorkflowTypeChange(workflowTypes);
+    }
   };
 
   const deselectAll = () => {
@@ -66,9 +59,14 @@ const WorkflowTypeFilter = ({
   };
 
   const displayText = useMemo(() => {
-    if (selectedWorkflowTypes.length === 0) {
+    if (isLoading) {
+      return "Loading workflow types...";
+    } else if (selectedWorkflowTypes.length === 0) {
       return "Select Workflow Type";
-    } else if (selectedWorkflowTypes.length === workflowTypes.length) {
+    } else if (
+      workflowTypes &&
+      selectedWorkflowTypes.length === workflowTypes.length
+    ) {
       return "All Workflow Types";
     } else {
       const selectedText = selectedWorkflowTypes
@@ -78,7 +76,11 @@ const WorkflowTypeFilter = ({
         ? `${selectedText.slice(0, FILTER_TEXT_LENGTH)}...`
         : selectedText;
     }
-  }, [selectedWorkflowTypes, workflowTypes.length]);
+  }, [selectedWorkflowTypes, workflowTypes, isLoading]);
+
+  if (error) {
+    return <div>Error loading workflow types.</div>;
+  }
 
   return (
     <div ref={dropdownRef} className="relative inline-block text-left">
@@ -108,53 +110,56 @@ const WorkflowTypeFilter = ({
       >
         <div className="absolute left-0 z-10 mt-2 w-56 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
-            <div className="flex justify-between px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900">
-              <div>
-                <button
-                  type="button"
-                  onClick={selectAll}
-                  className="text-blue-500 hover:text-blue-700 focus:outline-none"
-                >
-                  All
-                </button>
-                <span className="mx-2">|</span>
-                <button
-                  type="button"
-                  onClick={deselectAll}
-                  className="text-blue-500 hover:text-blue-700 focus:outline-none"
-                >
-                  None
-                </button>
+            {workflowTypes && (
+              <div className="flex justify-between px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900">
+                <div>
+                  <button
+                    type="button"
+                    onClick={selectAll}
+                    className="text-blue-500 hover:text-blue-700 focus:outline-none"
+                  >
+                    All
+                  </button>
+                  <span className="mx-2">|</span>
+                  <button
+                    type="button"
+                    onClick={deselectAll}
+                    className="text-blue-500 hover:text-blue-700 focus:outline-none"
+                  >
+                    None
+                  </button>
+                </div>
               </div>
-            </div>
-            {workflowTypes.map((type) => (
-              <div
-                key={type}
-                className={classNames(
-                  "block px-4 py-2 text-sm cursor-pointer",
-                  selectedWorkflowTypes.includes(type)
-                    ? "bg-gray-100 text-gray-900"
-                    : "text-gray-700",
-                )}
-                onClick={() =>
-                  handleChange({
-                    target: {
-                      value: type,
-                      checked: !selectedWorkflowTypes.includes(type),
-                    },
-                  })
-                }
-              >
-                <input
-                  type="checkbox"
-                  value={type}
-                  checked={selectedWorkflowTypes.includes(type)}
-                  onChange={handleChange}
-                  className="form-checkbox h-4 w-4 text-blue-500 transition duration-150 ease-in-out mr-2"
-                />
-                {formatWorkflowType(type)}
-              </div>
-            ))}
+            )}
+            {workflowTypes &&
+              workflowTypes.map((type) => (
+                <div
+                  key={type}
+                  className={classNames(
+                    "block px-4 py-2 text-sm cursor-pointer",
+                    selectedWorkflowTypes.includes(type)
+                      ? "bg-gray-100 text-gray-900"
+                      : "text-gray-700",
+                  )}
+                  onClick={() =>
+                    handleChange({
+                      target: {
+                        value: type,
+                        checked: !selectedWorkflowTypes.includes(type),
+                      },
+                    })
+                  }
+                >
+                  <input
+                    type="checkbox"
+                    value={type}
+                    checked={selectedWorkflowTypes.includes(type)}
+                    onChange={handleChange}
+                    className="form-checkbox h-4 w-4 text-blue-500 transition duration-150 ease-in-out mr-2"
+                  />
+                  {formatWorkflowType(type)}
+                </div>
+              ))}
           </div>
         </div>
       </Transition>

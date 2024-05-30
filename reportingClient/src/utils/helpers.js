@@ -29,6 +29,7 @@ export function nameFormatter(string) {
 export function mapWorkflowData(hit) {
   const txId = hit._source.jobs[0]?.extra_vars?.txId;
 
+  // NOTE: Not a permanent solution, this should be handled in the processing layer
   // Extract release from the name field if it's not available in the release field
   let release = hit._source.release;
   if (typeof release === "string") {
