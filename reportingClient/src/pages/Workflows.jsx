@@ -36,9 +36,6 @@ const Workflows = () => {
   const [startDate, setStartDate] = useState(queryParams.startDate || null);
   const [endDate, setEndDate] = useState(queryParams.endDate || null);
 
-  console.log(startDate);
-  console.log(endDate);
-
   const { isLoading, data } = useElasticsearchWorkflows({
     pageParam: currentPage - 1,
     searchQuery,

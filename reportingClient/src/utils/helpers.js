@@ -29,12 +29,21 @@ export function nameFormatter(string) {
 export function mapWorkflowData(hit) {
   const txId = hit._source.jobs[0]?.extra_vars?.txId;
 
+  // Extract release from the name field if it's not available in the release field
+  let release = hit._source.release;
+  if (typeof release === "string") {
+    const match = hit._source.jobs[0]?.name.match(/\d+\.\d+\.\d+/);
+    if (match) {
+      release = match[0];
+    }
+  }
+
   return {
     id: hit._id,
     limit: hit._source.limit,
     started: formatTimestamp(hit._source.started),
     finished: formatTimestamp(hit._source.finished),
-    release: hit._source.release,
+    release: release, // Use the extracted release value
     failed: hit._source.failed,
     automation_failure: hit._source.automation_failure,
     workflowType: nameFormatter(hit._source.workflow_type),
