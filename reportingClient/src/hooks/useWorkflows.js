@@ -32,7 +32,7 @@ export function useElasticsearchWorkflows({
     ],
     queryFn: async () => {
       const size = DOCS_PER_PAGE;
-      const query = buildWorkflowsQuery(
+      const query = buildWorkflowsQuery({
         searchQuery,
         startDate,
         endDate,
@@ -40,7 +40,7 @@ export function useElasticsearchWorkflows({
         workflowTypes,
         failed,
         releaseVersions,
-      );
+      });
 
       const response = await queryElasticsearch({
         endpoint: "/rhel_upgrade_reporting/_search",

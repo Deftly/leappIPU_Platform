@@ -1,12 +1,14 @@
 export function buildWorkflowsQuery(
   // TODO: Change this to be desctructured from an object so order doesn't matter
-  searchQuery = "",
-  startDate = null,
-  endDate = null,
-  regions = null,
-  workflowTypes = null,
-  failed = null,
-  releaseVersions = null,
+  {
+    searchQuery = "",
+    startDate = null,
+    endDate = null,
+    regions = null,
+    workflowTypes = null,
+    failed = null,
+    releaseVersions = null,
+  },
 ) {
   const query = {
     bool: {

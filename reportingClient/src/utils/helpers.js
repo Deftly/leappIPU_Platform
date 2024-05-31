@@ -30,7 +30,7 @@ export function mapWorkflowData(hit) {
   const txId = hit._source.jobs[0]?.extra_vars?.txId;
 
   // NOTE: Not a permanent solution, this should be handled in the processing layer
-  // Extract release from the name field if it's not available in the release field
+  // applied to dmz jobs, need to pull second to last item rather than last item
   let release = hit._source.release;
   if (typeof release === "string") {
     const match = hit._source.jobs[0]?.name.match(/\d+\.\d+\.\d+/);
