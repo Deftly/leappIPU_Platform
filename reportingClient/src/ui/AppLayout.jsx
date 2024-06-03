@@ -8,7 +8,7 @@ const AppLayout = () => {
       <div className="w-full flex-none md:w-64">
         <Sidebar />
       </div>
-      <div className="grow p-6 md:overflow-y-auto md:p-12">
+      <div className="grow p-6 md:overflow-y-auto md:p-8">
         <Outlet />
       </div>
     </div>

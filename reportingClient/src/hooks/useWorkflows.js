@@ -5,6 +5,7 @@ import {
   DOCS_PER_PAGE,
   REFRESH_TIME_MS,
   WORKFLOW_FIELDS,
+  ES_UPGRADE_INDEX,
 } from "../utils/constants";
 import { mapWorkflowData } from "../utils/helpers";
 
@@ -43,7 +44,7 @@ export function useElasticsearchWorkflows({
       });
 
       const response = await queryElasticsearch({
-        endpoint: "/rhel_upgrade_reporting/_search",
+        endpoint: ES_UPGRADE_INDEX,
         method: "POST",
         body: {
           query,

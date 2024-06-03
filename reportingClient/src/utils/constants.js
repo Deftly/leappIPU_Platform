@@ -3,6 +3,8 @@ export const MAX_TABLE_DATA_LENGTH = 24;
 export const FILTER_TEXT_LENGTH = 24;
 export const DOCS_PER_PAGE = 8;
 
+export const ES_UPGRADE_INDEX = "/rhel_upgrade_reporting/_search";
+
 export const WORKFLOW_FIELDS = [
   "limit",
   "started",

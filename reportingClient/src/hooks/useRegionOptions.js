@@ -1,12 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { queryElasticsearch } from "../api/queryElastic";
 
+import { ES_UPGRADE_INDEX } from "../utils/constants";
+
 const useRegionOptions = () => {
   const { data, isLoading, error } = useQuery(
     ["regionOptions"],
     async () => {
       const response = await queryElasticsearch({
-        endpoint: "/rhel_upgrade_reporting/_search",
+        endpoint: ES_UPGRADE_INDEX,
         method: "POST",
         body: {
           aggs: {

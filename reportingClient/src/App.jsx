@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 
 // import Dashboard from "./pages/Dashboard";
 import Workflows from "./pages/Workflows";
+import Stages from "./pages/Stages";
 // import Hosts from "./pages/Hosts";
 // import Faq from "./pages/FAQ";
 import PageNotFound from "./pages/PageNotFound";
@@ -32,7 +33,7 @@ const App = () => {
             <Route path="workflows" element={<Workflows />} />
             <Route
               path="workflows/:hostname/:txId/stages"
-              element={<div>Workflow stages</div>}
+              element={<Stages />}
             />
             <Route path="hosts" element={<UnderConstruction />} />
             <Route path="FAQ" element={<UnderConstruction />} />

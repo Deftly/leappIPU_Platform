@@ -131,7 +131,7 @@ const WorkflowTableV2 = ({ workflows = [], isLoading }) => {
                               navigate(
                                 `/workflows/${workflow.limit}/${workflow.txId}/stages`,
                                 {
-                                  state: { workflow },
+                                  state: { workflowData: workflow },
                                 },
                               )
                             }
