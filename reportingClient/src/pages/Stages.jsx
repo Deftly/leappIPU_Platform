@@ -2,6 +2,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { useElasticSearchStages } from "../hooks/useStages";
 
 import StagesTable from "../features/stages/StagesTable";
+import FailedTaskCard from "../features/stages/FailedTaskCard";
 
 import Heading from "../ui/Heading";
 import Spinner from "../ui/Spinner";
@@ -75,14 +76,20 @@ const Stages = () => {
           ))}
         </div>
       </div>
-      <div className="mt-8">
+      <div className="mt-10">
         <StagesTable
-          workflows={dataToUse.jobs}
+          jobs={dataToUse.jobs}
           isLoading={isLoading && !dataFromState}
           tableHeaders={tableHeaders}
           region={dataToUse.region}
         />
       </div>
+      {failedTasks.length > 0 && (
+        <div className="mt-10">
+          <Heading as="h3">Failed Tasks</Heading>
+          <FailedTaskCard tasks={failedTasks} />
+        </div>
+      )}
     </div>
   );
 };

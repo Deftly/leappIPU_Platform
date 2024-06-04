@@ -10,7 +10,7 @@ const getAAPTowerUrl = (region, jobId) => {
   return `${baseUrl}/#/jobs/playbook/${jobId}/output`;
 };
 
-const StagesTable = ({ workflows = [], isLoading, tableHeaders, region }) => {
+const StagesTable = ({ jobs = [], isLoading, tableHeaders, region }) => {
   return (
     <div className="px-4 sm:px-6 lg:px-0">
       <div className="mt-2 flow-root">
@@ -41,17 +41,17 @@ const StagesTable = ({ workflows = [], isLoading, tableHeaders, region }) => {
                         <Spinner />
                       </td>
                     </tr>
-                  ) : workflows.length === 0 ? (
+                  ) : jobs.length === 0 ? (
                     <tr>
                       <td
                         colSpan={tableHeaders.length}
                         className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center"
                       >
-                        No Workflows Found
+                        No Jobs Found
                       </td>
                     </tr>
                   ) : (
-                    workflows.map((workflow) => (
+                    jobs.map((workflow) => (
                       <tr key={workflow.id}>
                         {tableHeaders.map(({ key }) => {
                           let cellData = workflow[key];
