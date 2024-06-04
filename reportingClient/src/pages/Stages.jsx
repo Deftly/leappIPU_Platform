@@ -44,13 +44,15 @@ const Stages = () => {
   console.log("failedTasks:", failedTasks);
 
   return (
-    <div className="border-b border-gray-200 bg-blue-100 rounded-md shadow-sm px-4 py-4 sm:px-6">
-      <Heading as="h2">{dataToUse.workflowType}</Heading>
-      <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="border border-gray-200 bg-blue-100 rounded-md shadow-md px-4 py-4 sm:px-6">
+      <Heading as="h2" className="mb-8">
+        {dataToUse.workflowType}
+      </Heading>
+      <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2 lg:grid-cols-3">
         {fields.map(({ label, value }) => (
           <div key={label} className="sm:col-span-1">
             <div className="flex items-center">
-              <dt className="mr-2 flex-shrink-0 text-sm font-semibold ">
+              <dt className="mr-2 flex-shrink-0 text-sm font-semibold">
                 {label}:
               </dt>
               <dd className="text-sm text-gray-900">{value}</dd>

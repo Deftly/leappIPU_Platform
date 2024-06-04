@@ -1,14 +1,14 @@
 const StatusBadge = ({ failed }) => {
   const badgeClasses = failed
-    ? "bg-red-100 text-red-800"
-    : "bg-green-500 text-white";
+    ? "bg-red-100  border-red-500 text-red-700"
+    : "bg-green-100  border-green-500 text-green-700";
 
   return (
-    <span
-      className={`inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium ${badgeClasses}`}
-    >
-      {failed ? "Failed" : "Successful"}
-    </span>
+    <div className={`inline-block rounded-md ${badgeClasses}`}>
+      <p className="text-xs font-semibold px-2 py-1">
+        {failed ? "Failed" : "Successful"}
+      </p>
+    </div>
   );
 };
 
