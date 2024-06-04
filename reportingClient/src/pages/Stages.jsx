@@ -80,6 +80,7 @@ const Stages = () => {
           workflows={dataToUse.jobs}
           isLoading={isLoading && !dataFromState}
           tableHeaders={tableHeaders}
+          region={dataToUse.region}
         />
       </div>
     </div>

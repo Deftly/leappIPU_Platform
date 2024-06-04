@@ -1,18 +1,16 @@
-import { toast } from "react-hot-toast";
-
+import { towerBaseUrl } from "../../utils/constants";
 import { nameFormatter, classifyJob } from "../../utils/helpers";
 
 import Spinner from "../../ui/Spinner";
 import StatusBadge from "../../ui/StatusBadge";
 
-const StagesTable = ({ workflows = [], isLoading, tableHeaders }) => {
-  const handleDataClick = (cellData) => {
-    navigator.clipboard.writeText(cellData);
-    toast.success("Data copied to clipboard!");
-  };
+const getAAPTowerUrl = (region, jobId) => {
+  const baseUrl = towerBaseUrl[region];
 
-  console.log(workflows);
+  return `${baseUrl}/#/jobs/playbook/${jobId}/output`;
+};
 
+const StagesTable = ({ workflows = [], isLoading, tableHeaders, region }) => {
   return (
     <div className="px-4 sm:px-6 lg:px-0">
       <div className="mt-2 flow-root">
@@ -73,17 +71,29 @@ const StagesTable = ({ workflows = [], isLoading, tableHeaders }) => {
                           if (key === "name") {
                             cellData = nameFormatter(classifyJob(workflow));
                           }
+                          if (key === "id") {
+                            return (
+                              <td
+                                key={key}
+                                className="whitespace-nowrap px-3 py-4 text-sm text-gray-700"
+                              >
+                                <a
+                                  href={getAAPTowerUrl(region, workflow[key])}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-500 hover:underline"
+                                >
+                                  {workflow[key]}
+                                </a>
+                              </td>
+                            );
+                          }
                           return (
                             <td
                               key={key}
                               className="whitespace-nowrap px-3 py-4 text-sm text-gray-700"
                             >
-                              <div
-                                onClick={() => handleDataClick(cellData)}
-                                className="cursor-pointer"
-                              >
-                                {cellData}
-                              </div>
+                              {cellData}
                             </td>
                           );
                         })}

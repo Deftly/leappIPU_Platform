@@ -5,6 +5,13 @@ export const DOCS_PER_PAGE = 8;
 
 export const ES_UPGRADE_INDEX = "/rhel_upgrade_reporting/_search";
 
+export const towerBaseUrl = {
+  amrs: "https://asl-tower.bankofamerica.com",
+  apac: "https://asl-tower-apac.bankofamerica.com",
+  emea: "https://asl-tower-emea.bankofamerica.com",
+  dmz: "https://asl-towerb2d.bankofamerica.com",
+};
+
 export const WORKFLOW_FIELDS = [
   "limit",
   "started",
