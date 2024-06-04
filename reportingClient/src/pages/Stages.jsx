@@ -1,6 +1,8 @@
 import { useLocation, useParams } from "react-router-dom";
 import { useElasticSearchStages } from "../hooks/useStages";
 
+import StagesTable from "../features/stages/StagesTable";
+
 import Heading from "../ui/Heading";
 import Spinner from "../ui/Spinner";
 import StatusBadge from "../ui/StatusBadge";
@@ -20,6 +22,14 @@ const Stages = () => {
 
   const dataToUse = source[0];
 
+  const tableHeaders = [
+    { key: "name", label: "Job Name" },
+    { key: "started", label: "Start Time" },
+    { key: "finished", label: "End Time" },
+    { key: "id", label: "Job ID" },
+    { key: "status", label: "Status" },
+  ];
+
   const fields = [
     {
       label: "Hostname",
@@ -37,28 +47,35 @@ const Stages = () => {
     { label: "Region", value: dataToUse.region },
   ];
 
-  console.log("fields:", fields);
-
   const failedTasks = dataToUse.jobs.flatMap((job) => job.failedTasks || []);
 
   console.log("failedTasks:", failedTasks);
 
   return (
-    <div className="border border-gray-200 bg-blue-100 rounded-md shadow-md px-4 py-4 sm:px-6">
-      <Heading as="h2" className="mb-8">
-        {dataToUse.workflowType}
-      </Heading>
-      <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2 lg:grid-cols-3">
-        {fields.map(({ label, value }) => (
-          <div key={label} className="sm:col-span-1">
-            <div className="flex items-center">
-              <dt className="mr-2 flex-shrink-0 text-sm font-semibold">
-                {label}:
-              </dt>
-              <dd className="text-sm text-gray-900">{value}</dd>
+    <div>
+      <div className="border border-gray-200 bg-blue-100 rounded-md shadow-md px-4 py-4 sm:px-6">
+        <Heading as="h2" className="mb-8">
+          {dataToUse.workflowType}
+        </Heading>
+        <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2 lg:grid-cols-3">
+          {fields.map(({ label, value }) => (
+            <div key={label} className="sm:col-span-1">
+              <div className="flex items-center">
+                <dt className="mr-2 flex-shrink-0 text-sm font-semibold">
+                  {label}:
+                </dt>
+                <dd className="text-sm text-gray-900">{value}</dd>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+      </div>
+      <div className="mt-8">
+        <StagesTable
+          workflows={dataToUse.jobs}
+          isLoading={isLoading && !dataFromState}
+          tableHeaders={tableHeaders}
+        />
       </div>
     </div>
   );

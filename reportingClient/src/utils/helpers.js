@@ -26,6 +26,76 @@ export function nameFormatter(string) {
     .join(" ");
 }
 
+export function classifyJob(job) {
+  if (!job.extraVars) {
+    return "Unknown";
+  }
+
+  const {
+    subWorkflow,
+    backup_taskfile,
+    changefile_included_role,
+    changefile_tasks_from,
+  } = job.extraVars;
+
+  const operationalCheckMap = {
+    operational_check_7_to_9: "operational check 7 to 9",
+    operational_check_7_to_8: "operational check 7 to 8",
+    upgrade_7_to_8: "operational check 7 to 8",
+    inhibitor_check_7_to_8: "operational check 7 to 8",
+    upgrade_8_to_9: "operational check 8 to 9",
+    inhibitor_check_8_to_9: "operational check 8 to 9",
+    operational_check_8_to_9: "operational check 8 to 9", // Add this line
+  };
+
+  if (operationalCheckMap[subWorkflow]) {
+    if (
+      job.name &&
+      (job.name.includes("operational_check") ||
+        job.name.includes("leapp_operational_check"))
+    ) {
+      return operationalCheckMap[subWorkflow];
+    }
+  }
+
+  const roleMap = {
+    mitigation_7_to_8: "mitigation 7 to 8",
+    mitigation_8_to_9: "mitigation 8 to 9",
+    inhibitor_check_7_to_8: "inhibitor check 7 to 8",
+    inhibitor_check_8_to_9: "inhibitor check 8 to 9",
+    upgrade_7_to_8: "upgrade 7 to 8",
+    upgrade_8_to_9: "upgrade 8 to 9",
+    postupgrade_7_to_8: "postupgrade 7 to 8",
+    postupgrade_8_to_9: "postupgrade 8 to 9",
+  };
+
+  if (job.name && job.name.includes("rear_distribution")) {
+    if (
+      backup_taskfile === "rear_backup" ||
+      backup_taskfile === "lvm_snapshot_create"
+    ) {
+      return backup_taskfile;
+    }
+  }
+
+  if (job.name && job.name.includes("upgrade_distribution")) {
+    if (roleMap[changefile_included_role]) {
+      return roleMap[changefile_included_role];
+    }
+    if (
+      changefile_included_role === "changefile" &&
+      changefile_tasks_from === "rollback"
+    ) {
+      return "rollback";
+    }
+  }
+
+  return subWorkflow === "vastool_breadcrumb" ||
+    subWorkflow === "vastool_revert"
+    ? subWorkflow
+    : "Unknown";
+}
+
 export function mapWorkflowData(hit) {
   const txId = hit._source.jobs[0]?.extra_vars?.txId;
 
