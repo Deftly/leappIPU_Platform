@@ -54,9 +54,14 @@ const Stages = () => {
   return (
     <div>
       <div className="border border-gray-200 bg-blue-100 rounded-md shadow-md px-4 py-4 sm:px-6">
-        <Heading as="h2" className="mb-8">
-          {dataToUse.workflowType}
-        </Heading>
+        <div className="flex items-center mb-8">
+          <Heading as="h2" className="mr-6">
+            {dataToUse.workflowType}
+          </Heading>
+          {dataToUse.failedValidation && (
+            <StatusBadge failedValidation={true} />
+          )}
+        </div>
         <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2 lg:grid-cols-3">
           {fields.map(({ label, value }) => (
             <div key={label} className="sm:col-span-1">

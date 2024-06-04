@@ -11,6 +11,8 @@ const StagesTable = ({ workflows = [], isLoading, tableHeaders }) => {
     toast.success("Data copied to clipboard!");
   };
 
+  console.log(workflows);
+
   return (
     <div className="px-4 sm:px-6 lg:px-0">
       <div className="mt-2 flow-root">
@@ -61,7 +63,10 @@ const StagesTable = ({ workflows = [], isLoading, tableHeaders }) => {
                                 key={key}
                                 className="whitespace-nowrap px-3 py-4 text-sm text-gray-700"
                               >
-                                <StatusBadge failed={workflow.failed} />
+                                <StatusBadge
+                                  failed={workflow.failed}
+                                  timedOut={workflow.timed_out}
+                                />
                               </td>
                             );
                           }
