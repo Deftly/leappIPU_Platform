@@ -4,6 +4,7 @@ export const FILTER_TEXT_LENGTH = 24;
 export const DOCS_PER_PAGE = 8;
 
 export const ES_UPGRADE_INDEX = "/rhel_upgrade_reporting/_search";
+export const ES_REPORT_INDEX = "/rhel-reports-summary/_search";
 
 export const towerBaseUrl = {
   amrs: "https://asl-tower.bankofamerica.com",
