@@ -12,7 +12,9 @@ const FailedTaskCard = ({ tasks }) => {
             <p className="text-sm text-gray-500">
               Start: {task.start} | End: {task.end}
             </p>
-            <pre className="mt-2 text-sm text-gray-800">{task.stdout}</pre>
+            <pre className="mt-2 text-sm text-gray-800 whitespace-pre-wrap">
+              {task.stdout}
+            </pre>
           </div>
         </li>
       ))}

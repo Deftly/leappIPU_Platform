@@ -141,10 +141,14 @@ export function mapWorkflowData(hit) {
       failedTasks: job.failed_tasks?.map((failedTask) => ({
         task: failedTask.task,
         id: failedTask.id,
-        stdout: failedTask.stdout,
+        stdout: failedTask.stdout
+          // NOTE: The below will remove the hostname as well
+          // .replace(new RegExp(`^.*?\\[${hit._source.limit}\\]: `), "")
+          .replace(new RegExp(`^.*?(?=\\[${hit._source.limit}\\])`), "")
+          .replace(/\[0m$/, ""),
         role: failedTask.role,
-        start: failedTask.event_data?.start,
-        end: failedTask.event_data?.end,
+        start: formatTimestamp(failedTask.event_data?.start),
+        end: formatTimestamp(failedTask.event_data?.end),
       })),
     })),
   };
