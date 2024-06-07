@@ -29,14 +29,14 @@ const App = () => {
         <Routes>
           <Route element={<AppLayout />}>
             {/* <Route index element={<Dashboard />} /> */}
-            <Route index element={<UnderConstruction />} />
+            <Route index element={<UnderConstruction page="Dashboard" />} />
             <Route path="workflows" element={<Workflows />} />
             <Route
               path="workflows/:hostname/:txId/stages"
               element={<Stages />}
             />
-            <Route path="hosts" element={<UnderConstruction />} />
-            <Route path="FAQ" element={<UnderConstruction />} />
+            <Route path="hosts" element={<UnderConstruction page="Hosts" />} />
+            <Route path="FAQ" element={<UnderConstruction page="FAQ" />} />
             {/* <Route path="hosts" element={<Hosts />} /> */}
             {/* <Route path="FAQ" element={<Faq />} /> */}
           </Route>

@@ -6,6 +6,16 @@ export const DOCS_PER_PAGE = 8;
 export const ES_UPGRADE_INDEX = "/rhel_upgrade_reporting/_search";
 export const ES_REPORT_INDEX = "/rhel-reports-summary/_search";
 
+export const VALID_WORKFLOW_TYPES = [
+  "inhibitor_check_7_to_8", "inhibitor_check_8_to_9",
+  "operational_check_7_to_8",
+  "operational_check_7_to_9",
+  "operational_check_8_to_9",
+  "upgrade_7_to_8",
+  "upgrade_7_to_9",
+  "upgrade_8_to_9",
+];
+
 export const towerBaseUrl = {
   amrs: "https://asl-tower.bankofamerica.com",
   apac: "https://asl-tower-apac.bankofamerica.com",
