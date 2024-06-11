@@ -91,7 +91,12 @@ const WorkflowTableV2 = ({ workflows = [], isLoading }) => {
                                 key={key}
                                 className="whitespace-nowrap px-3 py-4 text-sm text-gray-700"
                               >
-                                <StatusBadge failed={workflow.failed} />
+                                <StatusBadge
+                                  failed={workflow.failed}
+                                  timedOut={workflow.jobs.some(
+                                    (job) => job.timed_out,
+                                  )}
+                                />
                               </td>
                             );
                           }
