@@ -1,6 +1,15 @@
 GET /rhel_upgrade_reporting/_search
 {
   "size": 0,
+  "query": {
+    "range": {
+      "started": {
+        "gte": "2024-06-01",
+        "lte": "2024-06-30",
+        "format": "yyyy-MM-dd"
+      }
+    }
+  },
   "aggs": {
     "failed_upgrade_jobs_by_half_hour": {
       "terms": {

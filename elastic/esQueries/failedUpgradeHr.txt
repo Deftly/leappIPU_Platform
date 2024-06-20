@@ -1,0 +1,68 @@
+GET /rhel_upgrade_reporting/_search
+{
+  "size": 0,
+  "query": {
+    "range": {
+      "started": {
+        "gte": "2024-06-01",
+        "lte": "2024-06-30",
+        "format": "yyyy-MM-dd"
+      }
+    }
+  },
+  "aggs": {
+    "failed_upgrade_jobs_by_hour": {
+      "terms": {
+        "script": {
+          "source": """
+            def date = doc['started'].value;
+            def hour = date.getHour();
+            def formattedHour = hour < 10 ? '0' + hour : '' + hour;
+            return formattedHour + ':00';
+          """,
+          "lang": "painless"
+        },
+        "size": 24,
+        "order": {
+          "_key": "asc"
+        }
+      },
+      "aggs": {
+        "total_upgrade_workflows": {
+          "filter": {
+            "wildcard": {
+              "workflow_type.keyword": "upgrade*"
+            }
+          }
+        },
+        "failed_upgrade_workflows": {
+          "filter": {
+            "bool": {
+              "must": [
+                {
+                  "term": {
+                    "failed": true
+                  }
+                },
+                {
+                  "wildcard": {
+                    "workflow_type.keyword": "upgrade*"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "failure_percentage": {
+          "bucket_script": {
+            "buckets_path": {
+              "failed": "failed_upgrade_workflows._count",
+              "total": "total_upgrade_workflows._count"
+            },
+            "script": "params.failed / params.total * 100"
+          }
+        }
+      }
+    }
+  }
+}

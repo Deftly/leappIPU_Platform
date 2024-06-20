@@ -15,6 +15,7 @@ dist-ssr
 .env*
 documents.json
 report_docs.json
+elastic/esQueries/*.json
 
 # Editor directories and files
 .vscode/*
