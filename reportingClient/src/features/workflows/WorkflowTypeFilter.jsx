@@ -3,7 +3,10 @@ import { Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import useWorkflowTypeOptions from "../../hooks/useWorkflowTypeOptions"; // Import the custom hook
 
-import { FILTER_TEXT_LENGTH, VALID_WORKFLOW_TYPES } from "../../utils/constants";
+import {
+  FILTER_TEXT_LENGTH,
+  VALID_WORKFLOW_TYPES,
+} from "../../utils/constants";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -22,8 +25,6 @@ const WorkflowTypeFilter = ({
   const { workflowTypes, isLoading, error } = useWorkflowTypeOptions(); // Use the custom hook
   const dropdownRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
-
-  console.log(workflowTypes);
 
   const handleChange = (event) => {
     const { value, checked } = event.target;
@@ -89,8 +90,9 @@ const WorkflowTypeFilter = ({
       <button
         type="button"
         onClick={toggleDropdown}
-        className={`inline-flex w-full justify-between gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 ${selectedWorkflowTypes.length === 0 ? "text-gray-500" : "text-gray-900"
-          }`}
+        className={`inline-flex w-full justify-between gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 ${
+          selectedWorkflowTypes.length === 0 ? "text-gray-500" : "text-gray-900"
+        }`}
       >
         {displayText}
         <ChevronDownIcon

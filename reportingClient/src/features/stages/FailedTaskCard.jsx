@@ -9,6 +9,7 @@ const FailedTaskCard = ({ tasks }) => {
           <div>
             <h3 className="text-lg font-semibold">{task.task}</h3>
             <p className="text-sm text-gray-500">Role: {task.role}</p>
+            <p className="text-sm text-gray-500">Task ID: {task.id}</p>
             <p className="text-sm text-gray-500">
               Start: {task.start} | End: {task.end}
             </p>
