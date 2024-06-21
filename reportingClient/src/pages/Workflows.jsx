@@ -9,6 +9,7 @@ import RegionFilter from "../features/workflows/RegionFilter";
 import WorkflowTypeFilter from "../features/workflows/WorkflowTypeFilter";
 import StatusFilter from "../features/workflows/StatusFilter";
 import DateRangeFilter from "../features/workflows/DateRangeFilter";
+import ReleaseVersionFilter from "../features/workflows/ReleaseVersionFilter";
 
 import Heading from "../ui/Heading";
 import SearchBar from "../ui/SearchBar";
@@ -35,6 +36,9 @@ const Workflows = () => {
   );
   const [startDate, setStartDate] = useState(queryParams.startDate || null);
   const [endDate, setEndDate] = useState(queryParams.endDate || null);
+  const [releaseVersions, setReleaseVersions] = useState(
+    queryParams.releaseVersions ? queryParams.releaseVersions.split(",") : [],
+  );
 
   const { isLoading, data } = useElasticsearchWorkflows({
     pageParam: currentPage - 1,
@@ -44,6 +48,7 @@ const Workflows = () => {
     failed,
     startDate,
     endDate,
+    releaseVersions,
   });
 
   const workflows = useMemo(() => data?.workflows || [], [data]);
@@ -97,6 +102,11 @@ const Workflows = () => {
     updateQueryParams(updatedQueryParams);
   };
 
+  const handleReleaseVersionChange = (selectedReleases) => {
+    setReleaseVersions(selectedReleases);
+    updateQueryParams({ releaseVersions: selectedReleases.join(",") });
+  };
+
   const handleResetFilters = () => {
     setSearchQuery("");
     setRegions([]);
@@ -104,6 +114,7 @@ const Workflows = () => {
     setFailed(null);
     setStartDate(null);
     setEndDate(null);
+    setReleaseVersions([]);
     setCurrentPage(1);
 
     updateQueryParams({
@@ -113,6 +124,7 @@ const Workflows = () => {
       failed: null,
       startDate: null,
       endDate: null,
+      releaseVersions: null,
       page: null,
     });
   };
@@ -151,6 +163,10 @@ const Workflows = () => {
         <WorkflowTypeFilter
           selectedWorkflowTypes={workflowTypes}
           onWorkflowTypeChange={handleWorkflowTypeChange}
+        />
+        <ReleaseVersionFilter
+          selectedReleases={releaseVersions}
+          onReleaseChange={handleReleaseVersionChange}
         />
         <StatusFilter
           selectedStatus={failed}

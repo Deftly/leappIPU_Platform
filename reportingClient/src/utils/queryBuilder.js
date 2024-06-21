@@ -1,15 +1,12 @@
-export function buildWorkflowsQuery(
-  // TODO: Change this to be desctructured from an object so order doesn't matter
-  {
-    searchQuery = "",
-    startDate = null,
-    endDate = null,
-    regions = null,
-    workflowTypes = null,
-    failed = null,
-    releaseVersions = null,
-  },
-) {
+export function buildWorkflowsQuery({
+  searchQuery = "",
+  startDate = null,
+  endDate = null,
+  regions = null,
+  workflowTypes = null,
+  failed = null,
+  releaseVersions = null,
+}) {
   const query = {
     bool: {
       must: [],
@@ -84,9 +81,9 @@ export function buildWorkflowsQuery(
     });
   }
 
-  if (releaseVersions) {
+  if (releaseVersions && releaseVersions.length > 0) {
     query.bool.must.push({
-      match: {
+      terms: {
         release: releaseVersions,
       },
     });
