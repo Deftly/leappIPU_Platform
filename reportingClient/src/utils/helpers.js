@@ -1,4 +1,6 @@
 export function formatTimestamp(timestamp) {
+  if (!timestamp) return undefined;
+
   const utcTimestamp = timestamp.replace("Z", "");
 
   const date = new Date(utcTimestamp);
@@ -142,13 +144,15 @@ export function mapWorkflowData(hit) {
         task: failedTask.task,
         id: failedTask.id,
         stdout: failedTask.stdout
-          // NOTE: The below will remove the hostname as well
-          // .replace(new RegExp(`^.*?\\[${hit._source.limit}\\]: `), "")
           .replace(new RegExp(`^.*?(?=\\[${hit._source.limit}\\])`), "")
           .replace(/\[0m$/, ""),
         role: failedTask.role,
-        start: formatTimestamp(failedTask.event_data?.start),
-        end: formatTimestamp(failedTask.event_data?.end),
+        start: failedTask.event_data?.start
+          ? formatTimestamp(failedTask.event_data.start)
+          : undefined,
+        end: failedTask.event_data?.end
+          ? formatTimestamp(failedTask.event_data.end)
+          : undefined,
       })),
     })),
   };
