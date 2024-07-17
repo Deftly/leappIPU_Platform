@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 
@@ -24,6 +24,7 @@ const Workflows = () => {
   const [currentPage, setCurrentPage] = useState(
     parseInt(queryParams.page) || 1,
   );
+  const [searchAfterStack, setSearchAfterStack] = useState([null]);
   const [searchQuery, setSearchQuery] = useState(queryParams.search || "");
   const [regions, setRegions] = useState(
     queryParams.regions ? queryParams.regions.split(",") : [],
@@ -41,7 +42,7 @@ const Workflows = () => {
   );
 
   const { isLoading, data } = useElasticsearchWorkflows({
-    pageParam: currentPage - 1,
+    searchAfter: searchAfterStack[currentPage - 1],
     searchQuery,
     regions,
     workflowTypes,
@@ -53,6 +54,20 @@ const Workflows = () => {
 
   const workflows = useMemo(() => data?.workflows || [], [data]);
   const totalHits = data?.totalHits || 0;
+
+  useEffect(() => {
+    if (data?.lastSort) {
+      setSearchAfterStack((prevStack) => {
+        const newStack = [...prevStack.slice(0, currentPage)];
+        if (currentPage === newStack.length) {
+          newStack.push(data.lastSort);
+        } else {
+          newStack[currentPage] = data.lastSort;
+        }
+        return newStack;
+      });
+    }
+  }, [data, currentPage]);
 
   // Handle functions
   const handlePageChange = (newPage) => {
@@ -127,6 +142,7 @@ const Workflows = () => {
       releaseVersions: null,
       page: null,
     });
+    setSearchAfterStack([null]);
   };
 
   const updateQueryParams = (newParams) => {

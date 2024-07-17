@@ -10,7 +10,7 @@ import {
 import { mapWorkflowData } from "../utils/helpers";
 
 export function useElasticsearchWorkflows({
-  pageParam = 0,
+  searchAfter = null,
   searchQuery = "",
   startDate = null,
   endDate = null,
@@ -22,7 +22,7 @@ export function useElasticsearchWorkflows({
   const { isLoading, data, error } = useQuery({
     queryKey: [
       "elasticsearchWorkflows",
-      pageParam,
+      searchAfter,
       searchQuery,
       startDate,
       endDate,
@@ -49,24 +49,26 @@ export function useElasticsearchWorkflows({
         body: {
           query,
           sort: [
-            {
-              started: {
-                order: "desc",
-              },
-            },
+            { started: { order: "desc" } },
+            { _id: { order: "desc" } }, // Add this secondary sort
           ],
-          from: pageParam * DOCS_PER_PAGE,
           size,
           _source: WORKFLOW_FIELDS,
+          ...(searchAfter && { search_after: searchAfter }),
         },
       });
 
       const workflows = response.hits.hits.map(mapWorkflowData);
       const totalHits = response.hits.total.value;
+      const lastSort =
+        response.hits.hits.length > 0
+          ? response.hits.hits[response.hits.hits.length - 1].sort
+          : null;
 
       return {
         workflows,
         totalHits,
+        lastSort,
       };
     },
     keepPreviousData: true,
